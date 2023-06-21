@@ -1,2 +1,0 @@
-ENV = 'development'
-DEBUG = True
