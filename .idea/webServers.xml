@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="2b459cd7-869c-4399-8990-8bd9971a9d36" name="DeepSpa">
+        <fileTransfer accessType="SFTP" host="117.25.169.110" port="2000" sshConfigId="bba326c4-ce9d-4c98-aee6-6fa1382e9251" sshConfig="wxy@117.25.169.110:2000 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
