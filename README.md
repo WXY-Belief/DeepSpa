@@ -9,3 +9,8 @@ pip install -r requirements.txt
 - Python 3.8.13  
 - GPU Memory: 3GB+  
 ## 3.Tutorial
+### format of input data
+The input data include two part including DAPI images and RNA molecules infomation that include gene name and coordinate.
+- DAPI images
+- RNA molecules infomation
+
