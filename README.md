@@ -3,7 +3,9 @@
 This repository include an available learing-based cell segmentation tool for DeepSpa that analyse subcellular resolution spatial transcriptomics.
 ## 2.Prerequisites
 To install requirements:  
-```pip install -r requirements.txt```  
+```
+pip install -r requirements.txt
+```  
 - Python 3.8.13  
 - GPU Memory: 3GB+  
 ## 3.Tutorial
