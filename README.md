@@ -4,6 +4,6 @@ This repository include an available learing-based cell segmentation tool for De
 ## 2.Prerequisites
 To install requirements:  
 ```pip install -r requirements.txt```  
--Python 3.8.13  
--GPU Memory: 3GB+  
+- Python 3.8.13  
+- GPU Memory: 3GB+  
 ## 3.Tutorial
