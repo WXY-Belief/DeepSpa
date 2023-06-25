@@ -13,7 +13,7 @@ pip install -r requirements.txt
 The input data include two part including DAPI images and RNA molecules infomation that include gene name and coordinate.
 - DAPI images
 - RNA molecules infomation  
- 表头  | 表头  | 表头
- ---- | ----- | ------  
- 单元格内容  | 单元格内容 | 单元格内容 
- 单元格内容  | 单元格内容 | 单元格内容  
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
