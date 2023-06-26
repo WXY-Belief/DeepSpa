@@ -1,0 +1,11 @@
+tangram-sc==1.0.3
+anndata==0.8.0
+plotly==5.10.0
+colorsys==
+pillow==9.1.0
+open3d==0.17.0
+scikit-learn=1.0.2
+scipy==1.8.0
+mmcv-full==1.7.1
+torch==1.7.0+cu110
+torchvision==0.8.1+cu92

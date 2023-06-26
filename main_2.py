@@ -2,6 +2,7 @@ import os
 import time
 import pandas as pd
 import toml
+from haha.Cell_Type_Map import cell_type_map
 from haha.Draw_Cell_Map import draw_cell_type_map
 from haha.Find_Anatomic_Domain_Kmeans import find_anatomic_domain
 from haha.Draw_Anatomic_Region import draw_anatomic_region_map
@@ -19,13 +20,38 @@ if __name__ == "__main__":
     device = all_parameter["device"]
     flag = all_parameter["section_align_flag"]
 
-    all_section_cell_center = pd.read_csv(os.path.join(output_path, "all_section_result/cell_center.csv"), sep=",",
-                                          header=0)
-    all_section_cell_type = pd.read_csv(os.path.join(output_path, "all_section_result/cell_type.csv"), sep=",",
-                                        header=0)
+    # 5.Cell type map
+    cell_type_annotation_mode = all_parameter["cell_type_annotation_mode"]
+    sc_data_path = all_parameter["sc_data_path"]
+    if cell_type_annotation_mode == 1:
+        cell_type_map(data_path, output_path, sc_data_path, device)
+    else:
+        all_section = os.listdir(data_path)
+        for item in all_section:
+            os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
 
-    # 6.draw cell type map result
-    draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path, output_path, flag)
+    # merge result of all section
+    all_section_cell_center = pd.DataFrame()
+    all_section_cell_type = pd.DataFrame()
+    all_result_save_path = os.path.join(output_path, "all_section_result")
+    for item in os.listdir(data_path):
+        cell_center_path = os.path.join(output_path, item, "3_gem/filtered_cell_center_coordinate.csv")
+        cell_type_path = os.path.join(output_path, item, "5_cell_type_result/cell_type.csv")
+
+        cell_center = pd.read_csv(cell_center_path, sep=",", header=0)
+        cell_center["section"] = int(item)
+
+        cell_type = pd.read_csv(cell_type_path, sep=",", header=0)
+        cell_type["section"] = int(item)
+
+        all_section_cell_center = pd.concat([all_section_cell_center, cell_center])
+        all_section_cell_type = pd.concat([all_section_cell_type, cell_type])
+
+        all_section_cell_center.to_csv(os.path.join(all_result_save_path, "cell_center.csv"), sep=",", header=True,
+                                       index=False)
+
+        all_section_cell_type.to_csv(os.path.join(all_result_save_path, "cell_type.csv"), sep=",", header=True,
+                                     index=False)
 
     # 7.find anatomic regions
     K = all_parameter["K"]
