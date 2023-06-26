@@ -10,7 +10,7 @@ pip install -r requirements.txt
 - GPU Memory: 3GB+  
 ## 3.Tutorial
 ### Directory structure of input data
-The directory structure entered is as follows:  
+The directory structure is as follows:  
 
 - all
   - 1 
@@ -26,6 +26,7 @@ The directory structure entered is as follows:
 
 ### Format of input data
 (1) DAPI.tif: DAPI images  
+
 (2) rna_coordinate.csv: RNA molecules infomation   
 <div align="center">
   
@@ -47,33 +48,33 @@ The directory structure entered is as follows:
 
 ### Input parameter
 The Configration.toml include all parameter in runing.
-- `data_path`: the data path
+- `data_path`: the directory of input data
 
-- `output_path` = "" # the output path
+- `output_path`: the directory of output data
 
-- `device` = "GPU" # Devices used
+- `device`: Using GPU or CPU, GPU is faster. 
 
-- `section_align_flag` = 0 # whether need to align section. 0:NO 1:YES
+- `section_align_flag`: whether need to align section. 0:NO 1:YES
 
-- `filter_mode` = 1   # Nuclear filtration mode. 1: Filter by diameter 2: Filter by cell distribution.
+- `filter_mode`: Nuclear filtration mode. 1: Filter by diameter 2: Filter by cell distribution.
 
-- `top_value` = 10  # 1: Filter by diameter. The maximum radius of a nucleus, in px. or  2: Filter by cell distribution. Top percentage.ascend order
+- `top_value`: 1: Filter by diameter. The maximum radius of a nucleus, in px. or  2: Filter by cell distribution. Top percentage.ascend order
 
-- `bottom_value` = 0  #  1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
+- `bottom_value`: 1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
 
-- `gray_value_threshold` = 5  # The DAPI image will be subtracted from this value
+- `gray_value_threshold`: # The DAPI image will be subtracted from this value to reduce impact of overexposure.
 
-- `maximum_cell_radius` = 50  # The maximum radius of a cell, in px
+- `maximum_cell_radius`: # The maximum radius of a cell, in px, control size of cell.
 
-- `cell_express_min_number` = 5 # The lowest value of cell expression, and cells below this value will be filtered
+- `cell_express_min_number`: # The lowest value of cell expression, and cells below this value will be filtered.
 
-- `cell_type_annotation_mode` = 1   # cell type nnotation mode. 1:tangram 2:clustering
+- `cell_type_annotation_mode`: # cell type nnotation mode. 1:tangram 2:clustering
 
-- `sc_data_path` = ""   # The single cell expression matrix
+- `sc_data_path`: # The single cell expression matrix applied in tangram.
 
-- `K` = 30 # Number of neighboring cells in find anatomic region
+- `K`: # Number of neighboring cells in find anatomic region
 
-- `anatomic_region_num` = 10 # The number of anatomic region
+- `anatomic_region_num`: # The number of anatomic region
 
-- `draw_3d_mode` = 1 # the way of 3d exhibition. 1: ploty 2: point cloudoutput_path = "" # the output path
+- `draw_3d_mode`:  # the way of 3d exhibition. 1: ploty 2: point cloud
 
