@@ -79,7 +79,6 @@ The Configration.toml include all parameter in runing.
 - `draw_3d_mode`:  # the way of 3d exhibition. 1: ploty 2: point cloud. Plotly has a limit of supporting up to 400,000 cells, whereas point cloud can handle any number of cells.
 
 ### Running
-#### Linux
 After selecting all parameter value, the cell segmentation will be executed through running the following command.
 
 ```
