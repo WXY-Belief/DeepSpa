@@ -14,8 +14,15 @@ The input data include two part including DAPI images and RNA molecules infomati
 - DAPI images  
 - RNA molecules infomation   
 
-| 列1标题 | 列2标题 |
-| ------- | ------- |
-| 单元格1 | 单元格2 |
-| 单元格3 | 单元格4 |
+| index | gene | row | col |
+| ------- | ------- | ------- |
+| 0 | Cdhr1 | 1 | 100 |
+| 1 | Gad1 | 4 | 239 |
+| 2 | Cdhr1 | 100 | 590 |
+
+| index | gene | row | col | num |
+| ------- | ------- | ------- | ------- | ------- |
+| 0 | Cdhr1 | 1 | 100 | 2 |
+| 1 | Gad1 | 4 | 239 | 3 |
+| 2 | Cdhr1 | 100 | 590 | 5 |
 
