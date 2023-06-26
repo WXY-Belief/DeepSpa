@@ -76,5 +76,23 @@ The Configration.toml include all parameter in runing.
 
 - `anatomic_region_num`: # The number of anatomic region
 
-- `draw_3d_mode`:  # the way of 3d exhibition. 1: ploty 2: point cloud
+- `draw_3d_mode`:  # the way of 3d exhibition. 1: ploty 2: point cloud. Plotly has a limit of supporting up to 400,000 cells, whereas point cloud can handle any number of cells.
 
+### Running
+#### Linux
+After selecting all parameter value, the cell segmentation will be executed through running the following command.
+
+```
+python main_1.py
+```
+
+If `cell_type_annotation_mode=1` and `draw_3d_mode=1`, meanwhile, cell type and 3D visualisation will be executed.Otherwise, the following command will be needed.
+
+```
+python main_2.py
+```
+
+If the number of cells exceeds 400,000, point cloud is needed with running the following command.
+```
+python 3D_point_cloud.py
+```
