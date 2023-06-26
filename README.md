@@ -14,3 +14,8 @@ The input data include two part including DAPI images and RNA molecules infomati
 - DAPI images  
 - RNA molecules infomation   
 
+| 列1标题 | 列2标题 |
+| ------- | ------- |
+| 单元格1 | 单元格2 |
+| 单元格3 | 单元格4 |
+
