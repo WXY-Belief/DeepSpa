@@ -13,10 +13,12 @@ pip install -r requirements.txt
 The input data include two part including DAPI images and RNA molecules infomation that include gene name and coordinate.  
 - DAPI images  
 - RNA molecules infomation   
-
+<div align="center">
+  
 | index | gene | row | col | num |
 | ------- | ------- | ------- | ------- | ------- |
 | 0 | Cdhr1 | 1 | 100 | 2 |
 | 1 | Gad1 | 4 | 239 | 3 |
 | 2 | Cdhr1 | 100 | 590 | 5 |
 
+</div>
