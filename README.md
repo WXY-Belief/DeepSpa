@@ -12,25 +12,16 @@ pip install -r requirements.txt
 ### Directory structure of input data
 The directory structure entered is as follows:  
 
-  ├── all  
-  │  ├── 1  
-  │       ├── rna_coordinate.csv  
-  │       └── DAPI.tif  
-  │   ├── 2  
-  │       ├── rna_coordinate.csv  
-  │       └── DAPI.tif  
-  │   └── 3  
-  │       ├── rna_coordinate.csv  
-  │       └── DAPI.tif  
-
-- 目录1
-  - 子目录1
-    - 文件1
-    - 文件2
-  - 子目录2
-    - 文件3
-- 目录2
-  - 文件4
+- all
+  - 1 
+    - rna_coordinate.csv
+    - DAPI.tif 
+  - 2 
+    - rna_coordinate.csv
+    - DAPI.tif 
+  - 3 
+    - rna_coordinate.csv
+    - DAPI.tif 
 
 
 ### Format of input data
