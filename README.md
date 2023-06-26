@@ -23,7 +23,6 @@ The directory structure entered is as follows:
     - rna_coordinate.csv
     - DAPI.tif 
 
-
 ### Format of input data
 The input data include two part including DAPI images and RNA molecules infomation that include gene name and coordinate.  
 (1) DAPI images  
