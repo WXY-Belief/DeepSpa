@@ -14,19 +14,20 @@ The directory structure entered is as follows:
 
 - all
   - 1 
-    - rna_coordinate.csv
     - DAPI.tif 
+    - rna_coordinate.csv
   - 2 
-    - rna_coordinate.csv
     - DAPI.tif 
-  - 3 
     - rna_coordinate.csv
+  - 3
     - DAPI.tif 
+    - rna_coordinate.csv
+
 
 ### Format of input data
 The input data include two part including DAPI images and RNA molecules infomation that include gene name and coordinate.  
-(1) DAPI images  
-(2) RNA molecules infomation   
+(1) DAPI.tif: DAPI images  
+(2) rna_coordinate.csv: RNA molecules infomation   
 <div align="center">
   
 | index | gene | row | col | num |
