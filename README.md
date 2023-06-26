@@ -13,7 +13,7 @@ pip install -r requirements.txt
 The directory structure entered is as follows:  
 
   ├── all  
-  │   ├── 1  
+  │  ├── 1  
   │       ├── rna_coordinate.csv  
   │       └── DAPI.tif  
   │   ├── 2  
