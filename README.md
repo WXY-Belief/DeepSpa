@@ -33,33 +33,33 @@ The input data include two part including DAPI images and RNA molecules infomati
 
 ### Input parameter
 The Configration.toml include all parameter in runing.
-- data_path: the data path
+- `data_path`: the data path
 
-- output_path = "" # the output path
+- `output_path` = "" # the output path
 
-- device = "GPU" # Devices used
+- `device` = "GPU" # Devices used
 
-- section_align_flag = 0 # whether need to align section. 0:NO 1:YES
+- `section_align_flag` = 0 # whether need to align section. 0:NO 1:YES
 
-- filter_mode = 1   # Nuclear filtration mode. 1: Filter by diameter 2: Filter by cell distribution.
+- `filter_mode` = 1   # Nuclear filtration mode. 1: Filter by diameter 2: Filter by cell distribution.
 
-- top_value = 10  # 1: Filter by diameter. The maximum radius of a nucleus, in px. or  2: Filter by cell distribution. Top percentage.ascend order
+- `top_value` = 10  # 1: Filter by diameter. The maximum radius of a nucleus, in px. or  2: Filter by cell distribution. Top percentage.ascend order
 
-- bottom_value = 0  #  1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
+- `bottom_value` = 0  #  1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
 
-- gray_value_threshold = 5  # The DAPI image will be subtracted from this value
+- `gray_value_threshold` = 5  # The DAPI image will be subtracted from this value
 
-- maximum_cell_radius = 50  # The maximum radius of a cell, in px
+- `maximum_cell_radius` = 50  # The maximum radius of a cell, in px
 
-- cell_express_min_number = 5 # The lowest value of cell expression, and cells below this value will be filtered
+- `cell_express_min_number` = 5 # The lowest value of cell expression, and cells below this value will be filtered
 
-- cell_type_annotation_mode = 1   # cell type nnotation mode. 1:tangram 2:clustering
+- `cell_type_annotation_mode` = 1   # cell type nnotation mode. 1:tangram 2:clustering
 
-- sc_data_path = ""   # The single cell expression matrix
+- `sc_data_path` = ""   # The single cell expression matrix
 
-- K = 30 # Number of neighboring cells in find anatomic region
+- `K` = 30 # Number of neighboring cells in find anatomic region
 
-- anatomic_region_num = 10 # The number of anatomic region
+- `anatomic_region_num` = 10 # The number of anatomic region
 
-- draw_3d_mode = 1 # the way of 3d exhibition. 1: ploty 2: point cloudoutput_path = "" # the output path
+- `draw_3d_mode` = 1 # the way of 3d exhibition. 1: ploty 2: point cloudoutput_path = "" # the output path
 
