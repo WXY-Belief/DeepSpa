@@ -23,16 +23,17 @@ The input data include two part including DAPI images and RNA molecules infomati
 
 </div>
 
-- `gene`: gene name  
-- `row`: row coordinate of transcript  
-- `col`: column coordinate of transcript  
+- `gene`: gene name
+  
+- `row`: row coordinate of transcript
+  
+- `col`: column coordinate of transcript
+  
 - `num`: number of transcript in spot for based-NGS spatial transcriptomics. The based-imaging spatial transcriptomics doesn't need "num".  
 
 ### Input parameter
 The Configration.toml include all parameter in runing.
-- data_path = "" # the data path
-
-- data_path = "" # the data path
+- data_path: the data path
 
 - output_path = "" # the output path
 
