@@ -9,6 +9,19 @@ pip install -r requirements.txt
 - Python 3.8.13  
 - GPU Memory: 3GB+  
 ## 3.Tutorial
+### Directory structure of input data
+The directory structure entered is as follows：
+├── all
+│   ├── 1
+│       ├── rna_coordinate.csv
+│       └── DAPI.tif
+│   ├── 2
+│       ├── rna_coordinate.csv
+│       └── DAPI.tif
+│   └── 3
+│       ├── rna_coordinate.csv
+│       └── DAPI.tif
+
 ### Format of input data
 The input data include two part including DAPI images and RNA molecules infomation that include gene name and coordinate.  
 (1) DAPI images  
