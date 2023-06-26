@@ -1,6 +1,6 @@
 # DeepSpa
 ## 1.Introduction
-This repository include an available learing-based cell segmentation tool for DeepSpa that analyse subcellular resolution spatial transcriptomics.
+This repository include an available learning-based cell segmentation tool for DeepSpa that analyse subcellular resolution spatial transcriptomics.
 ## 2.Prerequisites
 To install requirements:  
 ```
@@ -22,3 +22,7 @@ The input data include two part including DAPI images and RNA molecules infomati
 | 2 | Cdhr1 | 100 | 590 | 5 |
 
 </div>
+gene: gene name
+row: row coordinate of transcript
+col: column coordinate of transcript
+num: number of transcript in spot for based-NGS spatial transcriptomics. The based-imaging spatial transcriptomics doesn't need "num".
