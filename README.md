@@ -14,13 +14,7 @@ The input data include two part including DAPI images and RNA molecules infomati
 - DAPI images  
 - RNA molecules infomation   
 
-| index | gene | dot_row | dot_col |
-| ------- | ------- | ------- | ------- |
-| 0 | Cdhr1 | 1 | 100 |
-| 1 | Gad1 | 4 | 239 |
-| 2 | Cdhr1 | 100 | 590 |
-
-| index | gene | spot_row | spot_col | num |
+| index | gene | row | col | num |
 | ------- | ------- | ------- | ------- | ------- |
 | 0 | Cdhr1 | 1 | 100 | 2 |
 | 1 | Gad1 | 4 | 239 | 3 |
