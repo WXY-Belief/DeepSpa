@@ -22,6 +22,7 @@ The input data include two part including DAPI images and RNA molecules infomati
 | 2 | Cdhr1 | 100 | 590 | 5 |
 
 </div>
+
 `gene`: gene name  
 `row`: row coordinate of transcript  
 `col`: column coordinate of transcript  
