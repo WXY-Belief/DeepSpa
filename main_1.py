@@ -1,16 +1,10 @@
 import os
 import time
 import toml
-import pandas as pd
 from haha.Nuclues_Recongnition import nucleus_recongnition
 from haha.Align_Section import align_section
 from haha.Assign_RNA_To_Cell import assign_rna_to_cell
 from haha.Draw_Cell_Seg import draw_cell_seg
-from haha.Cell_Type_Map import cell_type_map
-from haha.Draw_Cell_Map import draw_cell_type_map
-from haha.Find_Anatomic_Domain_Kmeans import find_anatomic_domain
-from haha.Draw_Anatomic_Region import draw_anatomic_region_map
-from haha.Draw_3D import draw_3d
 
 if __name__ == "__main__":
     star_time = time.time()
