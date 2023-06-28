@@ -15,10 +15,10 @@ def draw_cell_seg(data_path, output_path, flag):
     all_section = os.listdir(data_path)
     for item in all_section:
         save_path = os.path.join(output_path, item, "4_cell_segmentation_image")
-        os.makedirs(save_path)
-        cell_center = pd.read_csv(os.path.join(output_path, item, "filtered_cell_center_coordinate.csv"), sep=",",
+        os.makedirs(save_path, exist_ok=True)
+        cell_center = pd.read_csv(os.path.join(output_path, item, "3_gem/filtered_cell_center_coordinate.csv"), sep=",",
                                   header=0)
-        cell_and_rna = pd.read_csv(os.path.join(output_path, item, "filtered_RNA_and_nearest_cell.csv"), sep=",",
+        cell_and_rna = pd.read_csv(os.path.join(output_path, item, "3_gem/filtered_RNA_and_nearest_cell.csv"), sep=",",
                                    header=0)
 
         if flag == 0:

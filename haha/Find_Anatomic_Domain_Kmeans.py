@@ -28,8 +28,10 @@ def find_anatomic_domain(all_section_cell_center, all_section_cell_type, output_
     all_sec_cell_k_neighbor = pd.DataFrame()
     all_section = all_section_cell_center["section"].drop_duplicates().tolist()
     cell_type_name = all_section_cell_type["cell_type"].drop_duplicates().tolist()
+    print(len(cell_type_name))
     for item in all_section:
         save_path = os.path.join(output_path, str(item), "7_anatomic_region_result")
+        os.makedirs(save_path, exist_ok=True)
         cell_center = all_section_cell_center[all_section_cell_center["section"] == item]
         cell_center.drop("section", axis=1, inplace=True)
 
@@ -49,13 +51,11 @@ def find_anatomic_domain(all_section_cell_center, all_section_cell_type, output_
         for i, row in enumerate(min_k_distance_index):
             info = dict(zip(cell_type_name, [0] * len(cell_type_name)))
             k_cell = merge_data.loc[row].groupby(by="cell_type").count()
-
             info.update(dict(zip(k_cell.index.to_list(), k_cell["cell_index"].to_list())))
             distribution[list_cell_index[i]] = list(info.values())
 
-        distribution.loc["section"] = [item] * cell_center.shape[0]
         distribution.index = cell_type_name
-
+        distribution.loc["section"] = [item] * cell_center.shape[0]
         all_sec_cell_k_neighbor = pd.concat([all_sec_cell_k_neighbor, distribution.T])
         distribution = distribution.T
         distribution["index"] = distribution.index.to_list()

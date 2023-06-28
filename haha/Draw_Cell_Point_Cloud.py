@@ -8,6 +8,8 @@ import colorsys
 import plotly
 import plotly.graph_objects as go
 
+size = 3
+
 
 def draw_legned(categroy, legend_color, save_path):
     color = copy.copy(legend_color)
@@ -75,13 +77,12 @@ def read_and_merge_data(path):
 
     merge_data_1 = pd.merge(all_section_cell_center, all_section_cell_type, on=["section", "cell_index"])
     merge_data_2 = pd.merge(merge_data_1, all_section_sec_anatomic_region, on=["section", "cell_index"])
-
+    merge_data_2.drop(["z", "angle"], axis=1, inplace=True)
     gap = 100
     all_section = sorted(merge_data_2["section"].drop_duplicates().tolist())
-    z = np.array(list(range(1, len(all_section) + 1))) * gap
     all_z = pd.DataFrame()
     all_z["section"] = all_section
-    all_z["z"] = z
+    all_z["z"] = np.array(list(range(1, len(all_section) + 1))) * gap
 
     final_point = pd.merge(merge_data_2, all_z, on="section")
 
@@ -99,7 +100,7 @@ def draw_all_cell_type(info, type_name, color_list, save_path):
         this_color = list(np.array(color_list[type_name.index(item)]) / 255)
         this_color.append(1.0)
         mat_this_domain.base_color = this_color
-        mat_this_domain.point_size = 2.0
+        mat_this_domain.point_size = size
         clouds.append({'name': 'this_domain' + str(item), 'geometry': pcd_this_domain, 'material': mat_this_domain})
         print(clouds)
     o3d.visualization.draw(clouds, show_skybox=False, bg_color=[1.0, 1.0, 1.0, 1.0])
@@ -115,19 +116,22 @@ def draw_single_cell_type(info, type_name, color_list):
         pcd_this_domain = o3d.t.geometry.PointCloud(this_domain)
         mat_this_domain = o3d.visualization.rendering.MaterialRecord()
         mat_this_domain.shader = 'defaultLitTransparency'
+        print(type_name.index(item))
+        print(color_list[type_name.index(item)])
+        print(np.array(color_list[type_name.index(item)]))
         this_color = list(np.array(color_list[type_name.index(item)]) / 255)
         this_color.append(1.0)
         mat_this_domain.base_color = this_color
-        mat_this_domain.point_size = 2.0
+        mat_this_domain.point_size = size
 
         rest_domain = o3d.core.Tensor(rest_point[["col", "row", "z"]].to_numpy())
         pcd_rest_domain = o3d.t.geometry.PointCloud(rest_domain)
         mat_rest_domain = o3d.visualization.rendering.MaterialRecord()
         mat_rest_domain.shader = 'defaultLitTransparency'
         mat_rest_domain.base_color = [0.5, 0.5, 0.5, 0.5]
-        mat_rest_domain.point_size = 2.0
-        clouds.append({'name': 'this_domain_' + item, 'geometry': pcd_this_domain, 'material': mat_this_domain})
-        clouds.append({'name': 'rest_domain_' + item, 'geometry': pcd_rest_domain, 'material': mat_rest_domain})
+        mat_rest_domain.point_size = size
+        clouds.append({'name': 'this_domain_' + str(item), 'geometry': pcd_this_domain, 'material': mat_this_domain})
+        clouds.append({'name': 'rest_domain_' + str(item), 'geometry': pcd_rest_domain, 'material': mat_rest_domain})
         o3d.visualization.draw(clouds, show_skybox=False, bg_color=[1.0, 1.0, 1.0, 1.0])
 
 
@@ -142,7 +146,7 @@ def draw_all_anatomic_region(info, type_name, color_list, save_path):
         this_color = list(np.array(color_list[type_name.index(item)]) / 255)
         this_color.append(1.0)
         mat_this_domain.base_color = this_color
-        mat_this_domain.point_size = 2.0
+        mat_this_domain.point_size = size
         clouds.append({'name': 'this_domain' + str(item), 'geometry': pcd_this_domain, 'material': mat_this_domain})
         print(clouds)
     o3d.visualization.draw(clouds, show_skybox=False, bg_color=[1.0, 1.0, 1.0, 1.0])
@@ -169,8 +173,8 @@ def draw_single_anatomic_region(info, type_name, color_list):
         mat_rest_domain.shader = 'defaultLitTransparency'
         mat_rest_domain.base_color = [0.5, 0.5, 0.5, 0.5]
         mat_rest_domain.point_size = 2.0
-        clouds.append({'name': 'this_domain_' + item, 'geometry': pcd_this_domain, 'material': mat_this_domain})
-        clouds.append({'name': 'rest_domain_' + item, 'geometry': pcd_rest_domain, 'material': mat_rest_domain})
+        clouds.append({'name': 'this_domain_' + str(item), 'geometry': pcd_this_domain, 'material': mat_this_domain})
+        clouds.append({'name': 'rest_domain_' + str(item), 'geometry': pcd_rest_domain, 'material': mat_rest_domain})
         o3d.visualization.draw(clouds, show_skybox=False, bg_color=[1.0, 1.0, 1.0, 1.0])
 
 
@@ -204,19 +208,19 @@ def draw_3d(output_path, draw_type):
     os.makedirs(save_path, exist_ok=True)
 
     merge_data = read_and_merge_data(output_path)
-
+    print(merge_data.head(3))
     if draw_type == "surface" or draw_type == "all":
         surface_color = generate_colors(1)[0]
         draw_surface(merge_data, surface_color, save_path)
 
     if draw_type == "cell_type" or draw_type == "all":
-        cell_type = merge_data["cell_type"]
+        cell_type = merge_data["cell_type"].drop_duplicates().tolist()
         cell_type_color_list = generate_colors(len(cell_type))
         draw_single_cell_type(merge_data, cell_type, cell_type_color_list)
         draw_all_cell_type(merge_data, cell_type, cell_type_color_list, save_path)
 
     if draw_type == "anatomic_region" or draw_type == "all":
-        anatomic_region = merge_data["anatomic_region"]
+        anatomic_region = merge_data["anatomic_region"].drop_duplicates().tolist()
         anatomic_region_color = generate_colors(len(anatomic_region))
         draw_single_anatomic_region(merge_data, anatomic_region, anatomic_region_color)
         draw_all_anatomic_region(merge_data, anatomic_region, anatomic_region_color, save_path)

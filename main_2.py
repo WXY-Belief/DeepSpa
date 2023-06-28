@@ -8,9 +8,8 @@ from haha.Find_Anatomic_Domain_Kmeans import find_anatomic_domain
 from haha.Draw_Anatomic_Region import draw_anatomic_region_map
 from haha.Draw_3D import draw_3d
 
-if __name__ == "__main__":
-    star_time = time.time()
 
+def main():
     # Load configuration file
     configration_file_path = "./Configration.toml"
     all_parameter = toml.load(configration_file_path)
@@ -20,15 +19,15 @@ if __name__ == "__main__":
     device = all_parameter["device"]
     flag = all_parameter["section_align_flag"]
 
-    # 5.Cell type map
-    cell_type_annotation_mode = all_parameter["cell_type_annotation_mode"]
-    sc_data_path = all_parameter["sc_data_path"]
-    if cell_type_annotation_mode == 1:
-        cell_type_map(data_path, output_path, sc_data_path, device)
-    else:
-        all_section = os.listdir(data_path)
-        for item in all_section:
-            os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
+    # # 5.Cell type map
+    # cell_type_annotation_mode = all_parameter["cell_type_annotation_mode"]
+    # sc_data_path = all_parameter["sc_data_path"]
+    # if cell_type_annotation_mode == 1:
+    #     cell_type_map(data_path, output_path, sc_data_path, device)
+    # else:
+    #     all_section = os.listdir(data_path)
+    #     for item in all_section:
+    #         os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
 
     # merge result of all section
     all_section_cell_center = pd.DataFrame()
@@ -53,9 +52,12 @@ if __name__ == "__main__":
         all_section_cell_type.to_csv(os.path.join(all_result_save_path, "cell_type.csv"), sep=",", header=True,
                                      index=False)
 
+    # # 5_1.Draw cell type map
+    # draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path, output_path, flag)
+
     # 7.find anatomic regions
     K = all_parameter["K"]
-    anatomic_domain_num = all_parameter["anatomic_domain_num"]
+    anatomic_domain_num = all_parameter["anatomic_region_num"]
     all_section_anatomic_region = find_anatomic_domain(all_section_cell_center, all_section_cell_type, output_path, K,
                                                        anatomic_domain_num)
 
@@ -68,3 +70,7 @@ if __name__ == "__main__":
         draw_3d(all_section_cell_center, all_section_cell_type, all_section_anatomic_region, output_path)
     else:
         pass
+
+
+if __name__ == "__main__":
+    main()

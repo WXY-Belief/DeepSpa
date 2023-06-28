@@ -9,6 +9,13 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="wxy@117.25.169.110:2000 key">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/disk/sdd/wxy/DeepSpa" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
     <option name="myAutoUpload" value="ALWAYS" />
   </component>

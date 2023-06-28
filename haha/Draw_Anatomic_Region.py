@@ -49,7 +49,7 @@ def draw_legned(categroy, legend_color, save_path):
                       legend=dict(yanchor="top", y=0.79, xanchor="left", x=0.2, font=dict(size=10))
                       )
     fig.update_layout(margin=dict(l=100, r=100, b=100, t=100))
-    plotly.offline.plot(fig, filename=save_path + "legend.html", auto_open=False)
+    plotly.offline.plot(fig, filename=os.path.join(save_path, "legend.html"), auto_open=False)
 
 
 def generate_colors(num_colors):

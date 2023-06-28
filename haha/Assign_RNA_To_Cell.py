@@ -8,25 +8,25 @@ from scipy.spatial.distance import cdist
 warnings.filterwarnings("ignore")
 
 
-def filter_unqualified_cell(cell_center_path, save_path, cell_express_min_number):
-    cell_center = pd.read_csv(cell_center_path, sep=",", header=0)
-    express_matrix = pd.read_csv(os.path.join(save_path, "GEM.csv"), sep=",", header=0, index_col=0)
+def filter_unqualified_cell(cell_center, save_path, cell_express_min_number):
+    express_matrix = pd.read_csv(os.path.join(save_path, "GEM.csv"), sep=",", header=0, index_col=0).T
     draw_need_file = pd.read_csv(os.path.join(save_path, "RNA_and_nearest_cell.csv"), sep=",", header=0)
 
-    express_matrix.loc["express_sum"] = express_matrix.apply(lambda x: x.sum())
+    express_matrix["express_sum"] = express_matrix.sum(axis=1)
 
-    drop_cell = express_matrix.columns[express_matrix.loc["express_sum"] < cell_express_min_number].tolist()
-    print(f"The number of cells with a total expression of less than {cell_express_min_number} is：", drop_cell.shape[0])
+    drop_cell = express_matrix[express_matrix["express_sum"] < cell_express_min_number].index.tolist()
+    print(f"The number of cells with a total expression of less than {cell_express_min_number} is：", len(drop_cell))
 
-    express_matrix.drop(drop_cell, axis=1, inplace=True)
-    express_matrix.drop("express_sum", axis=0, inplace=True)
-    express_matrix.to_csv(os.path.join(save_path, "filtered_GEM.csv"), sep=",", header=True, index=True)
+    express_matrix.drop(drop_cell, axis=0, inplace=True)
+    express_matrix.drop("express_sum", axis=1, inplace=True)
+    express_matrix.T.to_csv(os.path.join(save_path, "filtered_GEM.csv"), sep=",", header=True, index=True)
 
-    cell_center = cell_center[cell_center["cell_index"].isin(express_matrix.columns.tolist())]
+    rest_cell = [int(item) for item in express_matrix.index.tolist()]
+    cell_center = cell_center[cell_center["cell_index"].isin(rest_cell)]
     cell_center.to_csv(os.path.join(save_path, "filtered_cell_center_coordinate.csv"),
                        sep=",", header=True, index=False)
 
-    draw_need_file = draw_need_file[draw_need_file["cell_index"].isin(express_matrix.columns.tolist())]
+    draw_need_file = draw_need_file[draw_need_file["cell_index"].isin(rest_cell)]
     draw_need_file.to_csv(os.path.join(save_path, "filtered_RNA_and_nearest_cell.csv"),
                           sep=",", header=True, index=False)
 
@@ -57,7 +57,7 @@ def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_
     for item in all_section:
         print(f"<-------------section:{item}--------------->")
         save_path = os.path.join(output_path, item, "3_gem")
-        os.makedirs(save_path)
+        os.makedirs(save_path, exist_ok=True)
         if flag == 0:
             rna_coor_path = os.path.join(data_path, item, "rna_coordinate.csv")
             cell_center_path = os.path.join(output_path, item, "1_nucleus_recongnition_result/filtered_cell_center.csv")
@@ -68,7 +68,6 @@ def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_
 
         rna_coor = pd.read_csv(rna_coor_path, sep=",", header=0, index_col=None)
         cell_center = pd.read_csv(cell_center_path, sep=",", header=0, index_col=None)
-
         rna_coor_np = rna_coor[["row", "col"]].values
         cell_center_np = cell_center[["row", "col"]].values
 
@@ -77,11 +76,11 @@ def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_
         min_value = np.min(distances, axis=1)
         min_value_index = np.argmin(distances, axis=1)
         min_value_cell_index = cell_center.loc[min_value_index]["cell_index"].to_numpy()
-        rna_coor["min_distace"] = min_value
+        rna_coor["min_distance"] = min_value
         rna_coor["cell_index"] = min_value_cell_index
 
-        generate_draw_file = rna_coor[rna_coor["min_distace"] < max_distance]
-        generate_draw_file.to_csv(os.path.join(save_path, "draw_need_file.csv"), sep=",", header=True,
+        generate_draw_file = rna_coor[rna_coor["min_distance"] < max_distance]
+        generate_draw_file.to_csv(os.path.join(save_path, "RNA_and_nearest_cell.csv"), sep=",", header=True,
                                   index=False)
 
         gene_name = sorted(rna_coor["gene"].drop_duplicates().tolist())

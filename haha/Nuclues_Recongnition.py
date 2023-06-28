@@ -12,13 +12,12 @@ from scipy import ndimage
 import pandas as pd
 from PIL import Image
 
-config = "./haha/deep_learing_model/configs/config.py"  # config file
-checkpoint = "./haha/deep_learing_model/final_model/iter_31500.pth"  # weight path
 
 def find_dapi_img(path):
     for file_name in os.listdir(path):
         if os.path.join(path, file_name).lower().endswith(('.png', '.jpg', '.tif')):
             return os.path.join(path, file_name)
+
 
 # Draw the outline of nucleus
 def make_outline_overlay(RGB_data, predictions):
@@ -54,15 +53,16 @@ def get_cell_center_and_area(pre_result, save_path):
             centers[i, 1] = xmed + sc.start
             areas.append(len(yi))
     info = pd.DataFrame()
-    info["col"] = centers[:, 0]
-    info["row"] = centers[:, 1]
+    info["row"] = centers[:, 0]
+    info["col"] = centers[:, 1]
     info["area"] = areas
-    info["cell_index"] = list(range(1, info.shape[0] + 1))
+    info["cell_index"] = [int(i) for i in range(1, info.shape[0] + 1)]
     info.to_csv(os.path.join(save_path, "cell_center.csv"), sep=",", header=True, index=False)
 
 
 # Detected nucleus
-def predict(img_path, save_path, device):
+def predict(img_path, save_path, device, checkpoint):
+    config = "./haha/deep_learing_model/configs/config.py"  # config file
     # convert dapi images to format of RGB
     dapi_rgb = Image.open(img_path).convert("RGB")
     dapi_rgb_path = os.path.join(save_path, "DAPI_RGB.PNG")
@@ -102,7 +102,8 @@ def filter_nucleus(save_path, mode, top_value, bottom_value):
 
 
 # detecting and filtering nucleus
-def nucleus_recongnition(data_path, output_path, device, mode, top_value, bottom_value):
+def nucleus_recongnition(data_path, output_path, device, mode, top_value, bottom_value, pretrain_weight):
+    device = "cuda" if device == "GPU" else "cpu"
     star_time = time.time()
     all_section = os.listdir(data_path)
     for item in all_section:
@@ -111,7 +112,7 @@ def nucleus_recongnition(data_path, output_path, device, mode, top_value, bottom
         os.makedirs(save_path, exist_ok=True)
 
         # Detected nucleus and determine the center of cell
-        predict(dapi_path, save_path, device)
+        predict(dapi_path, save_path, device, pretrain_weight)
 
         # filter nuleus
         filter_nucleus(save_path, mode, top_value, bottom_value)

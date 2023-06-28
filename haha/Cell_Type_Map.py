@@ -3,23 +3,24 @@ import tangram as tg
 import pandas as pd
 import anndata as ad
 import os
+import torch
 
 
 def get_anndata_structure(data):
-    adata = ad.AnnData(data.to_numpy(), obs=pd.DataFrame(index=data.index.tolist()),
-                       var=pd.DataFrame(index=data.columns.values.tolist()),
-                       dtype='int32')
+    adata = ad.AnnData(X=data.to_numpy(), obs=pd.DataFrame(index=data.index.tolist()),
+                       var=pd.DataFrame(index=data.columns.values.tolist()))
     return adata
 
 
 def cell_type_map(data_path, output_path, sc_data_path, device):
+    device = "cuda:1" if device == "GPU" else "cpu"
     star_time = time.time()
 
     all_section = os.listdir(data_path)
     st_data = pd.DataFrame()
 
     for item in all_section:
-        gem = pd.read_csv(os.path.join(output_path, item, "3_gem/filtered_GEM.csv")).T
+        gem = pd.read_csv(os.path.join(output_path, item, "3_gem/filtered_GEM.csv"), sep=",", header=0, index_col=0).T
         gem["section"] = item
         st_data = pd.concat([st_data, gem])
 
@@ -56,7 +57,7 @@ def cell_type_map(data_path, output_path, sc_data_path, device):
     final_result = pd.DataFrame()
     final_result["cell_index"] = ad_map.var.index
     final_result["cell_type"] = st_predict_prob.idxmax(axis=1)
-    final_result["section"] = ad_map.var["section"]
+    final_result["section"] = ad_map.var["section"].tolist()
 
     for item_1 in all_section:
         save_path = os.path.join(output_path, item_1, "5_cell_type_result")

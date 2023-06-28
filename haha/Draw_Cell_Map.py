@@ -10,7 +10,7 @@ import plotly
 import plotly.graph_objects as go
 import copy
 from PIL import Image
-
+Image.MAX_IMAGE_PIXELS = None
 warnings.filterwarnings("ignore")
 
 
@@ -49,7 +49,7 @@ def draw_legned(categroy, legend_color, save_path):
                       legend=dict(yanchor="top", y=0.79, xanchor="left", x=0.2, font=dict(size=10))
                       )
     fig.update_layout(margin=dict(l=100, r=100, b=100, t=100))
-    plotly.offline.plot(fig, filename=save_path + "legend.html", auto_open=False)
+    plotly.offline.plot(fig, filename=os.path.join(save_path, "legend.html"), auto_open=False)
 
 
 def generate_colors(num_colors):
@@ -74,6 +74,7 @@ def draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path
 
     for item in all_section:
         save_path = os.path.join(output_path, str(item), "6_cell_type_map_images")
+        os.makedirs(save_path, exist_ok=True)
         rna_and_nearest_cell_path = os.path.join(output_path, str(item), "3_gem/filtered_RNA_and_nearest_cell.csv")
         rna_and_nearest_cell = pd.read_csv(rna_and_nearest_cell_path, sep=",", header=0)
 
