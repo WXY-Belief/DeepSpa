@@ -23,7 +23,7 @@ The directory structure is as follows:
     - DAPI.tif 
     - rna_coordinate.csv
 
-The sections are numerically named, starting from 1 for the top layer.
+The sections are numerically named, starting from 1 for the top layer. The DAPI images are in TIFF, PNG, or JPEG format, while the RNA coordinate file must be in CSV format.
 ### Format of input data
 (1) DAPI.tif: DAPI images  
 
