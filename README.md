@@ -21,7 +21,7 @@ The sections are numerically named, starting from 1 for the top layer. The DAPI 
     - rna_coordinate.csv
   - 3
     - DAPI.tif 
-    - rna_coordinate.csv
+    - rna_coordinate.csv  
 
 
 ### Format of input data
