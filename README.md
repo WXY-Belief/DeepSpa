@@ -14,7 +14,7 @@ The directory structure is as follows:
 
 - all
   - 1 
-    - DAPI.tif 
+    - DAPI.tif
     - rna_coordinate.csv
   - 2 
     - DAPI.tif 
@@ -23,7 +23,7 @@ The directory structure is as follows:
     - DAPI.tif 
     - rna_coordinate.csv
 
-
+The sections are numerically named, starting from 1 for the top layer.
 ### Format of input data
 (1) DAPI.tif: DAPI images  
 
