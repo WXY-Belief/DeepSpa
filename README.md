@@ -57,9 +57,9 @@ The sections are numerically named, starting from 1 for the top layer. The DAPI 
 | 1 | cell_type 2 | 4 | 23 | ... | 4 |
 | 2 | cell_type 1 | 10 | 50 | ... | 8 |
 
-</div>
-### Input parameter
+</div>  
 ### Input parameter  
+
 The Configration.toml include all parameter in runing. 
 
 - `data_path`: the directory of input data
