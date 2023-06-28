@@ -32,9 +32,9 @@ The directory structure is as follows:
   
 | index | gene | row | col | num |
 | ------- | ------- | ------- | ------- | ------- |
-| 0 | Cdhr1 | 1 | 100 | 2 |
-| 1 | Gad1 | 4 | 239 | 3 |
-| 2 | Cdhr1 | 100 | 590 | 5 |
+| 0 | gene 1 | 1 | 100 | 2 |
+| 1 | gene 2 | 4 | 239 | 3 |
+| 2 | gene 1 | 100 | 590 | 5 |
 
 </div>
 
@@ -44,8 +44,18 @@ The directory structure is as follows:
   
 - `col`: column coordinate of transcript
   
-- `num`: number of transcript in spot for based-NGS spatial transcriptomics. The based-imaging spatial transcriptomics doesn't need "num".  
+- `num`: number of transcript in spot for based-NGS spatial transcriptomics. The based-imaging spatial transcriptomics doesn't need "num".
+  
+(3) sc_data_path: The Sc-RNA data ,csv file , used in tangram for cell type annotation.
+<div align="center">
+  
+| index | cell_type | gene 1 | gene 2 | ...  | gene n |
+| ------- | ------- | ------- | ------- | ------- | ------- |
+| 0 | cell_type 1 | 0 | 10 | ... | 2 |
+| 1 | cell_type 2 | 4 | 23 | ... | 4 |
+| 2 | cell_type 1 | 10 | 50 | ... | 8 |
 
+</div>
 ### Input parameter
 The Configration.toml include all parameter in runing.
 - `data_path`: the directory of input data
@@ -77,6 +87,7 @@ The Configration.toml include all parameter in runing.
 - `anatomic_region_num`: # The number of anatomic region
 
 - `draw_3d_mode`:  # the way of 3d exhibition. 1: ploty 2: point cloud. Plotly has a limit of supporting up to 400,000 cells, whereas point cloud can handle any number of cells.
+
 
 ### Running
 After selecting all parameter value, the cell segmentation will be executed by running the following command.
