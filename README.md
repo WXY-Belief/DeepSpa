@@ -12,6 +12,7 @@ pip install -r requirements.txt
 ### Directory structure of input data
 The sections are numerically named, starting from 1 for the top layer. The DAPI images are in TIFF, PNG, or JPEG format, while the RNA coordinate file must be in CSV format.The directory structure is as follows:  
 
+
 - all
   - 1 
     - DAPI.tif
