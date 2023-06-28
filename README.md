@@ -58,6 +58,8 @@ The sections are numerically named, starting from 1 for the top layer. The DAPI 
 | 2 | cell_type 1 | 10 | 50 | ... | 8 |
 
 </div>  
+
+
 ### Input parameter  
 
 The Configration.toml include all parameter in runing. 
