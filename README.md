@@ -59,7 +59,9 @@ The sections are numerically named, starting from 1 for the top layer. The DAPI 
 
 </div>
 ### Input parameter
-The Configration.toml include all parameter in runing.  
+### Input parameter
+The Configration.toml include all parameter in runing. 
+
 - `data_path`: the directory of input data
 
 - `output_path`: the directory of output data
