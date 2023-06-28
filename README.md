@@ -23,6 +23,7 @@ The sections are numerically named, starting from 1 for the top layer. The DAPI 
     - DAPI.tif 
     - rna_coordinate.csv
 
+
 ### Format of input data
 (1) DAPI.tif: DAPI images  
 
@@ -36,6 +37,7 @@ The sections are numerically named, starting from 1 for the top layer. The DAPI 
 | 2 | gene 1 | 100 | 590 | 5 |
 
 </div>
+
 
 - `gene`: gene name
   
