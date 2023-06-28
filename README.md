@@ -32,9 +32,9 @@ The directory structure is as follows:
   
 | index | gene | row | col | num |
 | ------- | ------- | ------- | ------- | ------- |
-| 0 | Cdhr1 | 1 | 100 | 2 |
-| 1 | Gad1 | 4 | 239 | 3 |
-| 2 | Cdhr1 | 100 | 590 | 5 |
+| 0 | gene 1 | 1 | 100 | 2 |
+| 1 | gene 2 | 4 | 239 | 3 |
+| 2 | gene 1 | 100 | 590 | 5 |
 
 </div>
 
