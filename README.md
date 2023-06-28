@@ -46,7 +46,7 @@ The directory structure is as follows:
   
 - `num`: number of transcript in spot for based-NGS spatial transcriptomics. The based-imaging spatial transcriptomics doesn't need "num".
   
-(2) sc_data_path: The Sc-RNA data ,csv file , used in tangram for cell type annotation.
+(3) sc_data_path: The Sc-RNA data ,csv file , used in tangram for cell type annotation.
 <div align="center">
   
 | index | cell_type | gene 1 | gene 2 | ...  | gene n |
