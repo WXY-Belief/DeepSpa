@@ -1,18 +1,18 @@
-data_path = "/disk/sdd/wxy/DeepSpa_Data/3D_ISS_Data" # the data path
+data_path = "" # the data path
 
-output_path = "/disk/sdd/wxy/DeepSpa_Result/3D_ISS_result" # the output path
+output_path = "" # the output path
 
-pretrain_weight = "./haha/deep_learing_model/final_model/iter_31500.pth"
+pretrain_weight = "./haha/deep_learing_model/final_model/iter_31500.pth" # two pretrian weight under haha/deep_learing_model/final_model dir
 
 device = "GPU" # Devices used
 
-section_align_flag = 1 # whether need to align section. 0:NO 1:YES
+section_align_flag = 0 # whether need to align section. 0:NO 1:YES
 
-filter_mode = 1   # Nuclear filtration mode. 1: Filter by diameter 2: Filter by cell distribution.
+filter_mode = 2   # Nuclear filtration mode. 1: Filter by diameter 2: Filter by cell distribution.
 
-top_value = 1500  # 1: Filter by diameter. The maximum radius of a nucleus, in px. or  2: Filter by cell distribution. Top percentage.ascend order
+top_value = 3  # 1: Filter by diameter. The maximum radius of a nucleus, in px. or  2: Filter by cell distribution. Top percentage.ascend order
 
-bottom_value = 1  #  1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
+bottom_value = 3  #  1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
 
 gray_value_threshold = 5  # The DAPI image will be subtracted from this value
 
@@ -22,13 +22,12 @@ cell_express_min_number = 5 # The lowest value of cell expression, and cells bel
 
 cell_type_annotation_mode = 1   # cell type nnotation mode. 1:tangram 2:clustering
 
-sc_data_path = "/disk/sdd/wxy/3D_ISS_20230122/ISS_Data_30_Sec/single_cell_data/sc_data_v2.csv"   # The single cell expression matrix
+sc_data_path = ""   # The single cell expression matrix
 
 K = 30 # Number of neighboring cells in find anatomic region
 
 anatomic_region_num = 6 # The number of anatomic region
 
-draw_3d_mode = 1 # the way of 3d exhibition. 1: ploty 2: point cloud
 
 
 
