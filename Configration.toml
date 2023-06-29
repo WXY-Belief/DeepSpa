@@ -28,7 +28,7 @@ K = 30 # Number of neighboring cells in find anatomic region
 
 anatomic_region_num = 6 # The number of anatomic region
 
-draw_3d_mode = 2 # the way of 3d exhibition. 1: ploty 2: point cloud
+draw_3d_mode = 1 # the way of 3d exhibition. 1: ploty 2: point cloud
 
 
 

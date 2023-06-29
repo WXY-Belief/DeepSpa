@@ -143,21 +143,18 @@ def shift_img(section_name, in_centroid, in_all_centroid, save_path):
                                           str(int(item_5) - 1) + "_" + str(int(item_5)) + "_shift_img_centroid.PNG"))
 
 
-# 对图像进行二值化
 def bina_img(img, threshold):
     img[img < threshold] = 0
     img[img >= threshold] = 255
     return img
 
 
-# 图像膨胀
 def img_dilate(img, time):
     kernel = np.ones((9, 9), np.uint8)
     img = cv2.dilate(img, kernel, iterations=time)
     return img
 
 
-# 过滤掉噪音
 def fiter_nosie(img, threshold):
     _, labels, stats, centroids = cv2.connectedComponentsWithStats(img)
     for stat in stats:
@@ -166,7 +163,6 @@ def fiter_nosie(img, threshold):
     return img
 
 
-# 计算两张图片的差值
 def calculate_difference(img_1, img_2):
     in_distance = abs(img_2 - img_1)
     in_distance = int(in_distance.sum() / 255)
@@ -223,7 +219,6 @@ def align_section(data_path, output_path, gray_value_threshold):
     area_threshold = 10000
     scale = 1 / 10
     for item_9 in all_section:
-        print(f"<-------------section:{item_9}--------------->")
         output_base_dir = os.path.join(output_path, str(item_9), "2_Aligned_result")
         cell_center_path = os.path.join(output_base_dir, "shift_cell_center.csv")
         cell_center_save_path = os.path.join(output_base_dir, "rotate_cell_center.csv")

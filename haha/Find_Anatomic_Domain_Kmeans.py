@@ -1,6 +1,5 @@
 import os
 import time
-
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
@@ -28,7 +27,6 @@ def find_anatomic_domain(all_section_cell_center, all_section_cell_type, output_
     all_sec_cell_k_neighbor = pd.DataFrame()
     all_section = all_section_cell_center["section"].drop_duplicates().tolist()
     cell_type_name = all_section_cell_type["cell_type"].drop_duplicates().tolist()
-    print(len(cell_type_name))
     for item in all_section:
         save_path = os.path.join(output_path, str(item), "7_anatomic_region_result")
         os.makedirs(save_path, exist_ok=True)
@@ -78,4 +76,3 @@ def find_anatomic_domain(all_section_cell_center, all_section_cell_type, output_
 
     print("Find anatomic regions finished, runtime：", time.time() - start_time)
 
-    return result

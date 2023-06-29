@@ -78,7 +78,7 @@ def predict(img_path, save_path, device, checkpoint):
     result = inference_segmentor(model, dapi_rgb_path)
     pred = result_to_inst(result[0])[0]
 
-    # np.save(os.path.join(save_path, "pre_result.npy"), pred)
+    np.save(os.path.join(save_path, "pre_result.npy"), pred)
 
     ori_img = io.imread(dapi_rgb_path)
     overlay = make_outline_overlay(np.expand_dims(ori_img, 0), np.expand_dims(pred, 0))  # make contour of nucleus

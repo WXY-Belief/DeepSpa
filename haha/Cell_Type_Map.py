@@ -3,7 +3,6 @@ import tangram as tg
 import pandas as pd
 import anndata as ad
 import os
-import torch
 
 
 def get_anndata_structure(data):

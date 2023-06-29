@@ -51,11 +51,11 @@ def draw_legned(categroy, legend_color, save_path):
 
 def generate_colors(num_colors):
     colors = []
-    random.seed(123)  # 设置随机种子
+    random.seed(123)
     for i in range(num_colors):
-        hue = random.random()  # 随机选择色调值
-        saturation = random.uniform(0.5, 1.0)  # 随机选择饱和度值（范围可调整）
-        value = random.uniform(0.5, 1.0)  # 随机选择亮度值（范围可调整）
+        hue = random.random()
+        saturation = random.uniform(0.5, 1.0)
+        value = random.uniform(0.5, 1.0)
         rgb = colorsys.hsv_to_rgb(hue, saturation, value)
         rgb_int = [int(c * 255) for c in rgb]
         colors.append(rgb_int)
@@ -77,7 +77,6 @@ def read_and_merge_data(path):
 
     merge_data_1 = pd.merge(all_section_cell_center, all_section_cell_type, on=["section", "cell_index"])
     merge_data_2 = pd.merge(merge_data_1, all_section_sec_anatomic_region, on=["section", "cell_index"])
-    merge_data_2.drop(["z", "angle"], axis=1, inplace=True)
     gap = 100
     all_section = sorted(merge_data_2["section"].drop_duplicates().tolist())
     all_z = pd.DataFrame()
@@ -102,7 +101,6 @@ def draw_all_cell_type(info, type_name, color_list, save_path):
         mat_this_domain.base_color = this_color
         mat_this_domain.point_size = size
         clouds.append({'name': 'this_domain' + str(item), 'geometry': pcd_this_domain, 'material': mat_this_domain})
-        print(clouds)
     o3d.visualization.draw(clouds, show_skybox=False, bg_color=[1.0, 1.0, 1.0, 1.0])
     draw_legned(type_name, color_list, os.path.join(save_path, "cell_type_legend.html"))
 
@@ -116,9 +114,6 @@ def draw_single_cell_type(info, type_name, color_list):
         pcd_this_domain = o3d.t.geometry.PointCloud(this_domain)
         mat_this_domain = o3d.visualization.rendering.MaterialRecord()
         mat_this_domain.shader = 'defaultLitTransparency'
-        print(type_name.index(item))
-        print(color_list[type_name.index(item)])
-        print(np.array(color_list[type_name.index(item)]))
         this_color = list(np.array(color_list[type_name.index(item)]) / 255)
         this_color.append(1.0)
         mat_this_domain.base_color = this_color
@@ -148,7 +143,6 @@ def draw_all_anatomic_region(info, type_name, color_list, save_path):
         mat_this_domain.base_color = this_color
         mat_this_domain.point_size = size
         clouds.append({'name': 'this_domain' + str(item), 'geometry': pcd_this_domain, 'material': mat_this_domain})
-        print(clouds)
     o3d.visualization.draw(clouds, show_skybox=False, bg_color=[1.0, 1.0, 1.0, 1.0])
     draw_legned(type_name, color_list, os.path.join(save_path, "anatomic_region_legend.html"))
 
@@ -187,7 +181,7 @@ def draw_surface(data, surface_color, save_path):
     handle.write('\nPOINTS ' + str(data.shape[0]))
     handle.write('\nDATA ascii')
 
-    for idx, item in data.iterrows():  # 这里我只用到了前三列，故只需展示0，1，2三列 读者可根据自身需要写入其余列
+    for idx, item in data.iterrows():
         string = '\n' + str(item["col"]) + ' ' + str(item["row"]) + ' ' + str(item["z"])
         handle.write(string)
     handle.close()
@@ -195,7 +189,7 @@ def draw_surface(data, surface_color, save_path):
     surface_pcd = o3d.io.read_point_cloud(os.path.join(save_path, "surface.pcd"))
     mesh1 = o3d.geometry.TriangleMesh.create_from_point_cloud_alpha_shape(surface_pcd, alpha=80)
     mesh1.compute_vertex_normals()
-    mesh1.paint_uniform_color(list(np.array(surface_color) / 255))  # 指定显示为绿色
+    mesh1.paint_uniform_color(list(np.array(surface_color) / 255))
 
     mesh_out = mesh1.filter_smooth_simple(number_of_iterations=10)
     mesh_out.compute_vertex_normals()
@@ -208,7 +202,6 @@ def draw_3d(output_path, draw_type):
     os.makedirs(save_path, exist_ok=True)
 
     merge_data = read_and_merge_data(output_path)
-    print(merge_data.head(3))
     if draw_type == "surface" or draw_type == "all":
         surface_color = generate_colors(1)[0]
         draw_surface(merge_data, surface_color, save_path)

@@ -1,7 +1,5 @@
-import os
 import time
 import toml
-import subprocess
 from haha.Nuclues_Recongnition import nucleus_recongnition
 from haha.Align_Section import align_section
 from haha.Assign_RNA_To_Cell import assign_rna_to_cell

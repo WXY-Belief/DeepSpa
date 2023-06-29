@@ -1,14 +1,8 @@
 import time
-
 import pandas as pd
 import os
 import warnings
-
 warnings.filterwarnings("ignore")
-
-"""
-本模块的作用：过滤掉过大或过小的细胞核，
-"""
 
 
 def nucleus_radius_filter(input_path, save_path, maximum_cell_radius, minimum_cell_radius):

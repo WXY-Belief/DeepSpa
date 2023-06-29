@@ -6,8 +6,6 @@ from haha.Cell_Type_Map import cell_type_map
 from haha.Draw_Cell_Map import draw_cell_type_map
 from haha.Find_Anatomic_Domain_Kmeans import find_anatomic_domain
 from haha.Draw_Anatomic_Region import draw_anatomic_region_map
-from haha.Draw_3D import draw_3d
-
 
 def main():
     # Load configuration file
@@ -19,15 +17,15 @@ def main():
     device = all_parameter["device"]
     flag = all_parameter["section_align_flag"]
 
-    # # 5.Cell type map
-    # cell_type_annotation_mode = all_parameter["cell_type_annotation_mode"]
-    # sc_data_path = all_parameter["sc_data_path"]
-    # if cell_type_annotation_mode == 1:
-    #     cell_type_map(data_path, output_path, sc_data_path, device)
-    # else:
-    #     all_section = os.listdir(data_path)
-    #     for item in all_section:
-    #         os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
+    # 5.Cell type map
+    cell_type_annotation_mode = all_parameter["cell_type_annotation_mode"]
+    sc_data_path = all_parameter["sc_data_path"]
+    if cell_type_annotation_mode == 1:
+        cell_type_map(data_path, output_path, sc_data_path, device)
+    else:
+        all_section = os.listdir(data_path)
+        for item in all_section:
+            os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
 
     # merge result of all section
     all_section_cell_center = pd.DataFrame()
@@ -52,25 +50,19 @@ def main():
         all_section_cell_type.to_csv(os.path.join(all_result_save_path, "cell_type.csv"), sep=",", header=True,
                                      index=False)
 
-    # # 5_1.Draw cell type map
-    # draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path, output_path, flag)
+    # 5_1.Draw cell type map
+    draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path, output_path, flag)
 
     # 7.find anatomic regions
     K = all_parameter["K"]
     anatomic_domain_num = all_parameter["anatomic_region_num"]
-    all_section_anatomic_region = find_anatomic_domain(all_section_cell_center, all_section_cell_type, output_path, K,
-                                                       anatomic_domain_num)
+    find_anatomic_domain(all_section_cell_center, all_section_cell_type, output_path, K,
+                         anatomic_domain_num)
 
-    # 7_1.draw anatomic regions
+    # # 7_1.draw anatomic regions
+    all_section_anatomic_region = pd.read_csv(
+        os.path.join(output_path, "all_section_result/all_sec_anatomic_region_cluster_result.csv"), sep=",", header=0)
     draw_anatomic_region_map(all_section_cell_center, all_section_anatomic_region, data_path, output_path, flag)
-
-    # 8. draw 3D of cell types and anatomic regions
-    draw_3d_mode = all_parameter["draw_3d_mode"]
-    if draw_3d_mode == 1:
-        draw_3d(all_section_cell_center, all_section_cell_type, all_section_anatomic_region, output_path)
-    else:
-        pass
-
 
 if __name__ == "__main__":
     main()
