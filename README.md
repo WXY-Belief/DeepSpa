@@ -10,18 +10,19 @@ pip install -r requirements.txt
 - GPU Memory: 3GB+  
 ## 3.Tutorial
 ### Directory structure of input data
-The directory structure is as follows:  
+The sections are numerically named, starting from 1 for the top layer. The DAPI images are in TIFF, PNG, or JPEG format, while the RNA coordinate file must be in CSV format.The directory structure is as follows:  
+
 
 - all
   - 1 
-    - DAPI.tif 
+    - DAPI.tif
     - rna_coordinate.csv
   - 2 
     - DAPI.tif 
     - rna_coordinate.csv
   - 3
     - DAPI.tif 
-    - rna_coordinate.csv
+    - rna_coordinate.csv  
 
 
 ### Format of input data
@@ -37,6 +38,7 @@ The directory structure is as follows:
 | 2 | gene 1 | 100 | 590 | 5 |
 
 </div>
+
 
 - `gene`: gene name
   
@@ -55,9 +57,13 @@ The directory structure is as follows:
 | 1 | cell_type 2 | 4 | 23 | ... | 4 |
 | 2 | cell_type 1 | 10 | 50 | ... | 8 |
 
-</div>
-### Input parameter
-The Configration.toml include all parameter in runing.
+</div>  
+
+
+### Input parameter  
+
+The Configration.toml include all parameter in runing. 
+
 - `data_path`: the directory of input data
 
 - `output_path`: the directory of output data
