@@ -61,8 +61,9 @@ def get_cell_center_and_area(pre_result, save_path):
 
 
 # Detected nucleus
-def predict(img_path, save_path, device, checkpoint):
+def predict(img_path, save_path, device, threshold):
     config = "./haha/deep_learing_model/configs/config.py"  # config file
+    checkpoint = "./haha/deep_learing_model/final_model/iter_31500.pth"
     # convert dapi images to format of RGB
     dapi_rgb = Image.open(img_path).convert("RGB")
     dapi_rgb_path = os.path.join(save_path, "DAPI_RGB.PNG")
@@ -76,7 +77,7 @@ def predict(img_path, save_path, device, checkpoint):
         device=device,
         revise_checkpoint=[(r'^module\.', ''), ('model.', '')])
     result = inference_segmentor(model, dapi_rgb_path)
-    pred = result_to_inst(result[0])[0]
+    pred = result_to_inst(result[0], threshold=threshold)[0]
 
     np.save(os.path.join(save_path, "pre_result.npy"), pred)
 
@@ -102,7 +103,7 @@ def filter_nucleus(save_path, mode, top_value, bottom_value):
 
 
 # detecting and filtering nucleus
-def nucleus_recongnition(data_path, output_path, device, mode, top_value, bottom_value, pretrain_weight):
+def nucleus_recongnition(data_path, output_path, device, mode, top_value, bottom_value, threshold):
     device = "cuda" if device == "GPU" else "cpu"
     star_time = time.time()
     all_section = os.listdir(data_path)
@@ -112,7 +113,7 @@ def nucleus_recongnition(data_path, output_path, device, mode, top_value, bottom
         os.makedirs(save_path, exist_ok=True)
 
         # Detected nucleus and determine the center of cell
-        predict(dapi_path, save_path, device, pretrain_weight)
+        predict(dapi_path, save_path, device, threshold)
 
         # filter nuleus
         filter_nucleus(save_path, mode, top_value, bottom_value)

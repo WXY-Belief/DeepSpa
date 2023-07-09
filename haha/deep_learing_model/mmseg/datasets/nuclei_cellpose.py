@@ -33,7 +33,7 @@ from .nuclei import NucleiDataset
 import torch
 
 def result_to_inst(result, p=None, niter=200, interp=True, flow_threshold=0.4,
-                   min_size=15):
+                   min_size=15, threshold=0.5):
     """
     网络输出转换成instance map
 
@@ -48,12 +48,12 @@ def result_to_inst(result, p=None, niter=200, interp=True, flow_threshold=0.4,
         cellprob = torch.from_numpy(result[2:, ...])
         cellprob = torch.nn.functional.softmax(cellprob, dim=0)
         cellprob = cellprob[1, ...].numpy()
-        cp_mask = cellprob > 0.3
+        cp_mask = cellprob > threshold
     else:
         cellprob = torch.from_numpy(result[2, ...])
         cellprob = torch.nn.functional.sigmoid(cellprob)
         cellprob = cellprob.numpy()
-        cp_mask = cellprob > 0.3
+        cp_mask = cellprob > threshold
 
     # 2, h, w
     dp = result[:2, ...]
