@@ -107,7 +107,7 @@ def draw_all_cell_type(info, type_name, color_list, save_path):
 
 def draw_single_cell_type(info, type_name, color_list):
     for item in type_name:
-        print(f"Current cell type：{item}")
+        print(f"cell type：{item}")
         clouds = []
         single_cell_type = info[info["cell_type"] == item]
         rest_point = info.drop(single_cell_type.index, axis=0)
@@ -150,7 +150,7 @@ def draw_all_anatomic_region(info, type_name, color_list, save_path):
 
 def draw_single_anatomic_region(info, type_name, color_list):
     for item in type_name:
-        print(f"Current anatomic region：{item}")
+        print(f"anatomic region：{item}")
         clouds = []
         single_cell_type = info[info["anatomic_region"] == item]
         rest_point = info.drop(single_cell_type.index, axis=0)
