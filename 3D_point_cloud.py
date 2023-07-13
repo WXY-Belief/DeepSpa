@@ -1,12 +1,3 @@
-from haha.Draw_Cell_Point_Cloud import draw_3d
-import toml
-
-if __name__ == "__main__":
-    draw_type = "anatomic_region"
-    # Load configuration file
-    configration_file_path = "./Configration.toml"
-    all_parameter = toml.load(configration_file_path)
-    output_path = all_parameter["output_path"]  # Directory where the output results are saved
-    # output_path = "C:/Users/24667/Desktop/3D_ISS_result"
-
-    draw_3d(output_path, draw_type)
+version https://git-lfs.github.com/spec/v1
+oid sha256:bf719a08c2124a6b423a0e7eb4158ac72e0a00be560b9b62a967df5b8cb73b80
+size 459

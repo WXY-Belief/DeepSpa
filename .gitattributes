@@ -1,0 +1,8 @@
+Configration.toml filter=lfs diff=lfs merge=lfs -text
+README.md filter=lfs diff=lfs merge=lfs -text
+haha filter=lfs diff=lfs merge=lfs -text
+main_1.py filter=lfs diff=lfs merge=lfs -text
+main_2.py filter=lfs diff=lfs merge=lfs -text
+requirements filter=lfs diff=lfs merge=lfs -text
+3D_point_cloud.py filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
