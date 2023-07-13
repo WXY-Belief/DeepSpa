@@ -109,7 +109,7 @@ If `cell_type_annotation_mode=2`,using traditional clustering for cell type anno
 python main_2.py
 ```
 
-You can use point cloud by running the following command for 3D reconstruction including 3D surface of tissue/organ and 3D visualization of cell type and anatomic region.
+You can use point cloud by running the following command in local terminal for 3D reconstruction including 3D surface of tissue/organ and 3D visualization of cell type and anatomic region.
 ```
 python 3D_point_cloud.py
 ```
