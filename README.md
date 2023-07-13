@@ -67,6 +67,10 @@ The Configration.toml include all parameter in runing.
 - `data_path`: the directory of input data
 
 - `output_path`: the directory of output data
+  
+- `seg_threshold`: segmnetation threshold. lower values will generate more cell.
+
+- `seg_mode`: segmentation mode. 1: original DAPI as input. 2:The DAPI image is divided into small images of 512 * 512 as input
 
 - `device`: Using GPU or CPU, GPU is faster. 
 
