@@ -15,7 +15,7 @@ from PIL import Image
 Image.MAX_IMAGE_PIXELS = None
 cut_size = 512  # size of cut img
 config = "./haha/deep_learing_model/configs/config_cut_img.py"
-checkpoint = "./haha/deep_learing_model/final_model/iter_56000_no_cut.pth"
+checkpoint = "./haha/deep_learing_model/final_model/iter_56000_cut.pth"
 
 
 def make_dir(path, dir_name) -> str:
