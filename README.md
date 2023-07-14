@@ -100,16 +100,17 @@ The Configration.toml include all parameter in runing.
 After selecting all parameter value, the cell segmentation will be executed by running the following command.
 
 ```
-python main_1.py
+python main_1.py --c ./Configration.toml
 ```
 
 If `cell_type_annotation_mode=2`,using traditional clustering for cell type annotation ,you will need to execute the following command.
 
 ```
-python main_2.py
+python main_2.py --c ./Configration.toml
 ```
 
 You can use point cloud by running the following command in local terminal for 3D reconstruction including 3D surface of tissue/organ and 3D visualization of cell type and anatomic region.
 ```
-python 3D_point_cloud.py
+python 3D_point_cloud.py --c ./Configration.toml --m all
 ```
+Notice: The code runs on the server by default. If running on a local terminal, please pay attention to the path format.
