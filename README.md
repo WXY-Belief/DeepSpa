@@ -113,4 +113,4 @@ You can use point cloud by running the following command in local terminal for 3
 ```
 python 3D_point_cloud.py --c ./Configration.toml --m all
 ```
-Notice: The Demo runs on the server by default. If running on a local terminal, please pay attention to the path format.
+Notice: The code runs on the server by default. If running on a local terminal, please pay attention to the path format.
