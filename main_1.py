@@ -42,7 +42,8 @@ if __name__ == "__main__":
     # 3.Assign RNA to cell
     maximum_cell_radius = all_parameter['maximum_cell_radius']
     cell_express_min_number = all_parameter["cell_express_min_number"]
-    assign_rna_to_cell(data_path, output_path, maximum_cell_radius, flag, cell_express_min_number)
+    experiment_mode = all_parameter["experiment_mode"]
+    assign_rna_to_cell(data_path, output_path, maximum_cell_radius, flag, cell_express_min_number, experiment_mode, device)
 
     # 4.Draw cell segmentation result
     draw_cell_seg(data_path, output_path, flag)

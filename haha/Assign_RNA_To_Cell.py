@@ -120,7 +120,6 @@ def stereo_seq_assign_rna_to_cell(cell_center, rna_coordinate, max_distance, dev
     # generate gene-by-cell matrix
     generate_gene_by_cell_matrix(filter_rna_coordinate, gene_name, mode, save_path)
 
-
 def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_min_number, mode, device):
     star_time = time.time()
     all_section = os.listdir(data_path)
