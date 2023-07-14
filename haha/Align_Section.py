@@ -56,7 +56,7 @@ def adjust_img_nucleus_rna(section_name, data_path, save_path):
         cv2.imwrite(os.path.join(base_dir, "adjust_img.PNG"), new_img)
 
         cell_center = pd.read_csv(
-            os.path.join(save_path, str(item_3), "1_nucleus_recongnition_result/filtered_cell_center.csv"), sep=",",
+            os.path.join(save_path, str(item_3), "1_nucleus_recongnition_result", "filtered_cell_center.csv"), sep=",",
             header=0)
         cell_center["row"] += row_shift
         cell_center["col"] += col_shift
@@ -79,7 +79,7 @@ def find_centroid(section_name, save_path):
     in_centroid = [0, 0]
     in_all_centroid = []
     for item_4 in section_name:
-        in_adjust_coor = pd.read_csv(os.path.join(save_path, str(item_4), "2_Aligned_result/adjust_cell_center.csv"),
+        in_adjust_coor = pd.read_csv(os.path.join(save_path, str(item_4), "2_Aligned_result", "adjust_cell_center.csv"),
                                      sep=",", header=0)
         row = int(sum(in_adjust_coor["row"]) / in_adjust_coor.shape[0])
         col = int(sum(in_adjust_coor["col"]) / in_adjust_coor.shape[0])
@@ -87,10 +87,10 @@ def find_centroid(section_name, save_path):
         if row > in_centroid[0] and col > in_centroid[1]:
             in_centroid[0] = row
             in_centroid[1] = col
-        img = cv2.imread(os.path.join(save_path, str(item_4), "2_Aligned_result/adjust_img.PNG"))
+        img = cv2.imread(os.path.join(save_path, str(item_4), "2_Aligned_result", "adjust_img.PNG"))
         cv2.circle(img=img, center=(col, row), radius=20, color=(255, 255, 255),
                    thickness=-1, lineType=None, shift=None)
-        cv2.imwrite(os.path.join(save_path, str(item_4), "2_Aligned_result/adjust_img_centroid.PNG"), img)
+        cv2.imwrite(os.path.join(save_path, str(item_4), "2_Aligned_result", "adjust_img_centroid.PNG"), img)
     return in_centroid, in_all_centroid
 
 
@@ -137,7 +137,7 @@ def shift_img(section_name, in_centroid, in_all_centroid, save_path):
         if int(item_5) == 1:
             continue
         else:
-            path = os.path.join(save_path, str(int(item_5) - 1), "2_Aligned_result/shift_img_centroid.PNG")
+            path = os.path.join(save_path, str(int(item_5) - 1), "2_Aligned_result", "shift_img_centroid.PNG")
             draw_overlap_img(path, os.path.join(base_dir, "shift_img.PNG"),
                              os.path.join(base_dir,
                                           str(int(item_5) - 1) + "_" + str(int(item_5)) + "_shift_img_centroid.PNG"))
@@ -232,7 +232,7 @@ def align_section(data_path, output_path, gray_value_threshold):
             shutil.copy(rna_coordinate_path, rna_coordinate_save_path)
             continue
         else:
-            ref_img_path = os.path.join(output_path, str(int(item_9) - 1), "2_Aligned_result/align_img.PNG")
+            ref_img_path = os.path.join(output_path, str(int(item_9) - 1), "2_Aligned_result", "align_img.PNG")
             need_alig_img_path = os.path.join(output_base_dir, "shift_img.PNG")
             ref_img = cv2.imread(ref_img_path, cv2.IMREAD_GRAYSCALE)
             need_align_img = cv2.imread(need_alig_img_path, cv2.IMREAD_GRAYSCALE)

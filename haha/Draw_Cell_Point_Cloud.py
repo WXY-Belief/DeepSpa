@@ -63,15 +63,15 @@ def generate_colors(num_colors):
 
 
 def read_and_merge_data(path):
-    all_section_cell_center_path = os.path.join(path, "all_section_result/cell_center.csv")
+    all_section_cell_center_path = os.path.join(path, "all_section_result", "cell_center.csv")
     all_section_cell_center = pd.read_csv(all_section_cell_center_path, sep=",", header=0)
     all_section_cell_center.drop("area", axis=1, inplace=True)
 
-    all_section_cell_type_path = os.path.join(path, "all_section_result/cell_type.csv")
+    all_section_cell_type_path = os.path.join(path, "all_section_result", "cell_type.csv")
     all_section_cell_type = pd.read_csv(all_section_cell_type_path, sep=",", header=0)
 
     all_section_sec_anatomic_region_path = os.path.join(path,
-                                                        "all_section_result/all_sec_anatomic_region_cluster_result.csv")
+                                                        "all_section_result", "all_sec_anatomic_region_cluster_result.csv")
 
     all_section_sec_anatomic_region = pd.read_csv(all_section_sec_anatomic_region_path, sep=",", header=0)
 

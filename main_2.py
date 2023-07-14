@@ -32,8 +32,8 @@ def main(config_path):
     all_section_cell_type = pd.DataFrame()
     all_result_save_path = os.path.join(output_path, "all_section_result")
     for item in os.listdir(data_path):
-        cell_center_path = os.path.join(output_path, item, "3_gem/filtered_cell_center_coordinate.csv")
-        cell_type_path = os.path.join(output_path, item, "5_cell_type_result/cell_type.csv")
+        cell_center_path = os.path.join(output_path, item, "3_gem", "filtered_cell_center_coordinate.csv")
+        cell_type_path = os.path.join(output_path, item, "5_cell_type_result", "cell_type.csv")
 
         cell_center = pd.read_csv(cell_center_path, sep=",", header=0)
         cell_center["section"] = int(item)
@@ -61,13 +61,13 @@ def main(config_path):
 
     # # 7_1.draw anatomic regions
     all_section_anatomic_region = pd.read_csv(
-        os.path.join(output_path, "all_section_result/all_sec_anatomic_region_cluster_result.csv"), sep=",", header=0)
+        os.path.join(output_path, "all_section_result", "all_sec_anatomic_region_cluster_result.csv"), sep=",", header=0)
     draw_anatomic_region_map(all_section_cell_center, all_section_anatomic_region, data_path, output_path, flag)
 
 
 if __name__ == "__main__":
     # input parameter
     parser = argparse.ArgumentParser()
-    parser.add_argument("--c", type=str, default="./Configration.toml")
+    parser.add_argument("--c", type=str, default="Configration.toml")
     args = parser.parse_args()
     main(args.c)

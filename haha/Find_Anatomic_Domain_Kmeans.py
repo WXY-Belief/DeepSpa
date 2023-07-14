@@ -61,11 +61,11 @@ def find_anatomic_domain(all_section_cell_center, all_section_cell_type, output_
         distribution.to_csv(os.path.join(save_path, "cell_K_neighbor.csv"), sep=",", header=True, index=False)
 
     all_sec_cell_k_neighbor["cell_index"] = all_sec_cell_k_neighbor.index.to_list()
-    all_sec_cell_k_neighbor.to_csv(os.path.join(output_path, "all_section_result/all_sec_cell_K_neighbor.csv"),
+    all_sec_cell_k_neighbor.to_csv(os.path.join(output_path, "all_section_result", "all_sec_cell_K_neighbor.csv"),
                                    sep=",", header=True, index=False)
 
     all_sec_clustering_result_path = os.path.join(output_path,
-                                                  "all_section_result/all_sec_anatomic_region_cluster_result.csv")
+                                                  "all_section_result", "all_sec_anatomic_region_cluster_result.csv")
     result = kmeans_clustering(all_sec_cell_k_neighbor, all_sec_clustering_result_path, anatomic_domain_num)
 
     for item in all_section:

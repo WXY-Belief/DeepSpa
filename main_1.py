@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     # input parameter
     parser = argparse.ArgumentParser()
-    parser.add_argument("--c", type=str, default="./Configration.toml")
+    parser.add_argument("--c", type=str, default="Configration.toml")
     args = parser.parse_args()
     # Load configuration file
     all_parameter = toml.load(args.c)
