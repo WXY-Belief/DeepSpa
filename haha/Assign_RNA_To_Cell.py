@@ -43,9 +43,9 @@ def generate_gene_by_cell_matrix(rna_and_nearest_cell, gene_name, mode, save_pat
         info = dict(zip(gene_name, [0] * len(gene_name)))
 
         single_cell = rna_and_nearest_cell[rna_and_nearest_cell["cell_index"] == item]
-        if mode == "ISS":
-            single_cell = single_cell.groupby('gene')["num"].count()
         if mode == "stereo-seq":
+            single_cell = single_cell.groupby('gene')["num"].count()
+        if mode == "ISS":
             single_cell = single_cell.groupby('gene').count()
         info.update(dict(zip(single_cell.index.to_list(), single_cell["cell_index"].to_list())))
 
