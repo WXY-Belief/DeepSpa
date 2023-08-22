@@ -10,13 +10,17 @@ from scipy.spatial.distance import cdist
 warnings.filterwarnings("ignore")
 
 
-def filter_unqualified_cell(cell_center, save_path, cell_express_min_number):
+def filter_unqualified_cell(cell_center, save_path, cell_express_min_number, cell_express_max_number):
     express_matrix = pd.read_csv(os.path.join(save_path, "GEM.csv"), sep=",", header=0, index_col=0).T
     draw_need_file = pd.read_csv(os.path.join(save_path, "RNA_and_nearest_cell.csv"), sep=",", header=0)
 
     express_matrix["express_sum"] = express_matrix.sum(axis=1)
 
-    drop_cell = express_matrix[express_matrix["express_sum"] < cell_express_min_number].index.tolist()
+    if cell_express_max_number == 0:
+        drop_cell = express_matrix[express_matrix["express_sum"] < cell_express_min_number].index.tolist()
+    else:
+        drop_cell = express_matrix[express_matrix["express_sum"] < cell_express_min_number or express_matrix[
+            "express_sum"] > cell_express_max_number].index.tolist()
     print(f"The number of cells with a total expression of less than {cell_express_min_number} is：", len(drop_cell))
 
     express_matrix.drop(drop_cell, axis=0, inplace=True)
@@ -120,7 +124,9 @@ def stereo_seq_assign_rna_to_cell(cell_center, rna_coordinate, max_distance, dev
     # generate gene-by-cell matrix
     generate_gene_by_cell_matrix(filter_rna_coordinate, gene_name, mode, save_path)
 
-def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_min_number, mode, device):
+
+def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_min_number, cell_express_max_number,
+                       mode, device):
     star_time = time.time()
     all_section = os.listdir(data_path)
 
@@ -142,13 +148,14 @@ def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_
         cell_center = pd.read_csv(cell_center_path, sep=",", header=0, index_col=None)
 
         if mode == "ISS":
-            iss_assign_rna_to_cell(cell_center, rna_coordinate, max_distance,mode, save_path)
+            iss_assign_rna_to_cell(cell_center, rna_coordinate, max_distance, mode, save_path)
         else:
             stereo_seq_assign_rna_to_cell(cell_center, rna_coordinate, max_distance, device, mode, save_path)
 
-        cell_center, filter_rna_num = filter_unqualified_cell(cell_center, save_path, cell_express_min_number)
+        cell_center, filter_rna_num = filter_unqualified_cell(cell_center, save_path, cell_express_min_number,
+                                                              cell_express_max_number)
         cell_center["section"] = item
         all_cell_center = pd.concat([all_cell_center, cell_center])
-        print(f"the number of background RNA ：{rna_coordinate.shape[0] - filter_rna_num.shape[0]}")
+        print(f"the number of background RNA ：{rna_coordinate.shape[0] - filter_rna_num}")
 
     print(f"generate expression matrix finished, runtime：{time.time() - star_time}")
