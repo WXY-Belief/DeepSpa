@@ -87,7 +87,7 @@ The Configration.toml include all parameter in runing.
 - `maximum_cell_radius`: # The maximum radius of a cell, in px, control size of cell.
 
 - `cell_express_min_number`: # The manimun value of cell expression, and cells below this value will be filtered.
-- 
+
 - `cell_express_max_number` # The maximum value of cell expression, and cells above this value will be filtered. if this value is 0, this parameter is invalid
 
 - `cell_type_annotation_mode`: # cell type nnotation mode. 1:tangram 2:clustering
