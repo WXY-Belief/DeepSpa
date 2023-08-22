@@ -1,6 +1,6 @@
 # DeepSpa
 ## 1.Introduction
-This repository include an available learning-based cell segmentation tool for DeepSpa that analyse subcellular resolution spatial transcriptomics.
+This repository include an available learning-based cell segmentation tool for DeepSpa that analyse subcellular resolution spatial transcriptomics.In order to provide users with an experience, we have provided a example data in this project. Please refer to  for details
 ## 2.Prerequisites
 To install requirements:  
 ```
@@ -110,7 +110,7 @@ If `cell_type_annotation_mode=2`,using traditional clustering for cell type anno
 ```
 python main_2.py --c ./Configration.toml
 ```
-
+### Example data
 You can use point cloud by running the following command in local terminal for 3D reconstruction including 3D surface of tissue/organ and 3D visualization of cell type and anatomic region.
 ```
 python 3D_point_cloud.py --c ./Configration.toml --m all
