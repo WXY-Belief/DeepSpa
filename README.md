@@ -99,7 +99,7 @@ The Configration.toml include all parameter in runing.
 - `anatomic_region_num`: # The number of anatomic region
 
 ### Running
-**Note**: The **main_1.py** and **main_2.py** of DeepSpa supports Linux, MacOS and Windows platform, but **3D_point_cloud.py** only support in MacOS or Windows platform.If running on MacOS or Windows platform, please pay attention to the path format
+**Note**: The **main_1.py** and **main_2.py** of DeepSpa supports Linux, MacOS and Windows platform, but **3D_point_cloud.py** only support in MacOS or Windows platform.If running on MacOS or Windows platform, please pay attention to the path format.  
 After selecting all parameter value, the cell segmentation will be executed by running the following command.
 
 ```
