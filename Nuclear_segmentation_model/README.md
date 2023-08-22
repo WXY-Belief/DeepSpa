@@ -1,9 +1,6 @@
 ## Environment
-
 python=3.7
-
 torch=1.9.1+cu111
-
 mmcv-full=1.6.1
 
 ## Data prepare
