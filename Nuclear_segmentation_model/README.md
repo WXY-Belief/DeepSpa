@@ -11,7 +11,7 @@ We downloaded the dataset from the official website of dsb2018 and tissuenet, an
 
 
 -
-    -a
+    - a
 
 
 ## Train
