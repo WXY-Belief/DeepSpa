@@ -13,12 +13,12 @@ We downloaded the dataset from the official website of dsb2018 and tissuenet, an
 
 -- 
     |-- data
-      |-- dsb2018
-        |-- images
-        |-- labels
-      |-- tissuenet_1.0
-        |-- images
-        |-- labels
+        |-- dsb2018
+            |-- images
+            |-- labels
+        |-- tissuenet_1.0
+            |-- images
+            |-- labels
 
 
 ## Train
