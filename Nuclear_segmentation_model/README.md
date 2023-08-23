@@ -1,14 +1,19 @@
 ## Environment
-
-python=3.7
-
-torch=1.9.1+cu111
-
-mmcv-full=1.6.1
-
+python=3.7  
+torch=1.9.1+cu111  
+mmcv-full=1.6.1  
 ## Data prepare
+We downloaded the dataset from the official website of dsb2018 and tissuenet, and crop the training set of dsb2018 to 256x256. We put the processed data on https://drive.google.com/drive/folders/1nhc-Cy8ScGtekdCRjtVbvxkAYxo_hki1?hl=zh-cn. Users can download and store it in the ./data folder, and unzip it. 
 
-We downloaded the dataset from the official website of dsb2018 and tissuenet, and crop the training set of dsb2018 to 256x256. We put the processed data on https://drive.google.com/drive/folders/1nhc-Cy8ScGtekdCRjtVbvxkAYxo_hki1.
+
+- data
+  - dsb2018
+    - images
+    - labels
+  - tissuenet_1.0
+    - images
+    - labels
+
 
 ## Train
 
@@ -22,7 +27,7 @@ We downloaded the dataset from the official website of dsb2018 and tissuenet, an
 
 
 
-## Reference
+## Refernence
 
 [open-mmlab/mmsegmentation: OpenMMLab Semantic Segmentation Toolbox and Benchmark. (github.com)](https://github.com/open-mmlab/mmsegmentation)
 
