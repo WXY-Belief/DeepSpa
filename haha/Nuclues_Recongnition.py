@@ -63,7 +63,7 @@ def get_cell_center_and_area(pre_result, save_path):
 # Detected nucleus
 def predict(img_path, save_path, device, threshold):
     config = "./haha/deep_learing_model/configs/config.py"  # config file
-    checkpoint = "./haha/deep_learing_model/final_model/dsb_tissue_56000.pth"
+    checkpoint = "./haha/deep_learing_model/final_model/dsb_tissue_iter_56000.pth"
     # convert dapi images to format of RGB
     dapi_rgb = Image.open(img_path).convert("RGB")
     dapi_rgb_path = os.path.join(save_path, "DAPI_RGB.PNG")
