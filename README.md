@@ -1,6 +1,6 @@
 # DeepSpa
 ## 1.Introduction
-This repository include an available learning-based cell segmentation tool for DeepSpa that analyse subcellular resolution spatial transcriptomics.In order to provide users with an experience, we have provided a example data in this project. Please refer to **Example data** for details. **For a tutorial on nuclear segmentation training, please refer to Nuclear_segmentation_model/README.md.**
+This repository includes a learning-based cell segmentation tool for DeepSpa, which analyzes subcellular resolution spatial transcriptomics. To enhance the user experience, we have provided example data within this project. For more details, please refer to the "Example Data" section. **If you are looking for a tutorial on nuclear segmentation training, you can find it in the "Nuclear_segmentation_model/README.md" file**.
 ## 2.Prerequisites
 To install requirements:  
 ```
