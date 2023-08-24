@@ -202,7 +202,7 @@ def rotate_nucleus_and_signal(coor_path, rotate_angle, rotate_center, save_path)
 
 def align_section(data_path, output_path, gray_value_threshold):
     star_time = time.time()
-    all_section = sorted(os.listdir(data_path))
+    all_section = sorted([int(i) for i in os.listdir(data_path)])
 
     creat_dir(all_section, output_path)
 
@@ -225,7 +225,7 @@ def align_section(data_path, output_path, gray_value_threshold):
         rna_coordinate_path = os.path.join(output_base_dir, "shift_rna_coordinate.csv")
         rna_coordinate_save_path = os.path.join(output_base_dir, "rotate_rna_coordinate.csv")
 
-        if item_9 == "1":
+        if item_9 == 1:
             align_img = cv2.imread(os.path.join(output_base_dir, "shift_img.PNG"))
             cv2.imwrite(os.path.join(output_base_dir, "align_img.PNG"), align_img)
             shutil.copy(cell_center_path, cell_center_save_path)
