@@ -125,7 +125,7 @@ def stereo_seq_assign_rna_to_cell(cell_center, rna_coordinate, max_distance, dev
     generate_gene_by_cell_matrix(filter_rna_coordinate, gene_name, mode, save_path)
 
 
-def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_min_number, cell_express_max_number,
+def assign_rna_to_cell(data_path, output_path, max_distance, cell_express_min_number, cell_express_max_number,
                        mode, device):
     star_time = time.time()
     all_section = os.listdir(data_path)
@@ -133,16 +133,12 @@ def assign_rna_to_cell(data_path, output_path, max_distance, flag, cell_express_
     all_cell_center = pd.DataFrame()
     for item in all_section:
         print(f"<-------------section:{item}--------------->")
-        save_path = os.path.join(output_path, item, "3_gem")
+        save_path = os.path.join(output_path, item, "2_gem")
         os.makedirs(save_path, exist_ok=True)
 
-        if flag == 0:
-            rna_coor_path = os.path.join(data_path, item, "rna_coordinate.csv")
-            cell_center_path = os.path.join(output_path, item, "1_nucleus_recongnition_result",
+        rna_coor_path = os.path.join(data_path, item, "rna_coordinate.csv")
+        cell_center_path = os.path.join(output_path, item, "1_nucleus_recongnition_result",
                                             "filtered_cell_center.csv")
-        else:
-            rna_coor_path = os.path.join(output_path, item, "2_Aligned_result", "rotate_rna_coordinate.csv")
-            cell_center_path = os.path.join(output_path, item, "2_Aligned_result", "rotate_cell_center.csv")
 
         rna_coordinate = pd.read_csv(rna_coor_path, sep=",", header=0, index_col=None)
         cell_center = pd.read_csv(cell_center_path, sep=",", header=0, index_col=None)

@@ -19,7 +19,7 @@ def cell_type_map(data_path, output_path, sc_data_path, device):
     st_data = pd.DataFrame()
 
     for item in all_section:
-        gem = pd.read_csv(os.path.join(output_path, item, "3_gem", "filtered_GEM.csv"), sep=",", header=0, index_col=0).T
+        gem = pd.read_csv(os.path.join(output_path, item, "2_gem", "filtered_GEM.csv"), sep=",", header=0, index_col=0).T
         gem["section"] = item
         st_data = pd.concat([st_data, gem])
 

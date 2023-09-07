@@ -1,299 +1,236 @@
-import copy
 import os
-import time
-import pandas as pd
 import cv2
-import numpy as np
-import math
 import shutil
+import numpy as np
+import pandas as pd
+from PIL import Image
+from valis import registration, valtils
+from skimage import transform as tf
+import pyvips
+
+Image.MAX_IMAGE_PIXELS = None
 
 
-def find_dapi_img(path):
-    for file_name in os.listdir(path):
-        if os.path.join(path, file_name).lower().endswith(('.png', '.jpg', '.tif')):
-            return os.path.join(path, file_name)
+def draw_point(point, img, save_path):
+    new_img = np.zeros((img.shape[0], img.shape[1], 3))
+    new_img[:, :, 0] = img
+    point_img = np.zeros((img.shape[0], img.shape[1]))
+    for idx, item in point.iterrows():
+        cv2.circle(img=point_img, center=(int(item["col"]), int(item["row"])), radius=5, color=(255, 0, 0),
+                   thickness=-1)
+    new_img[:, :, 1] = point_img
+    cv2.imwrite(os.path.join(save_path, "rna.PNG"), new_img)
 
 
-def creat_dir(name, save_dir):
-    for item_1 in name:
-        os.makedirs(os.path.join(save_dir, str(item_1), "2_Aligned_result"), exist_ok=True)
+def preprocessed_images(path, save_path, Grayscale_threshold, padding):
+    all_section = sorted([int(item) for item in os.listdir(path)])
+
+    # step 1： revise the size of images
+    max_img_shape = [0, 0]
+    for item in all_section:
+        dapi_path = os.path.join(path, str(item), "DAPI.PNG")
+        dapi = Image.open(dapi_path).convert("L")
+
+        if dapi.height > max_img_shape[0]:
+            max_img_shape[0] = dapi.height
+        if dapi.width > max_img_shape[1]:
+            max_img_shape[1] = dapi.width
+
+    max_img_shape[0] += padding
+    max_img_shape[1] += padding
+    step_1_save_path = os.path.join(save_path, "revised_images")
+    os.makedirs(step_1_save_path, exist_ok=True)
+
+    for item in all_section:
+        dapi = np.array(Image.open(os.path.join(path, str(item), "DAPI.PNG")))
+        new_dapi = np.zeros(max_img_shape)
+        new_dapi[padding:dapi.shape[0] + padding, padding:dapi.shape[1] + padding] = dapi
+        new_dapi[new_dapi < Grayscale_threshold] = 0
+        cv2.imwrite(os.path.join(step_1_save_path, str(item) + ".PNG"), new_dapi)
+
+    # step 2：transform the formate of images
+    step_2_save_path = os.path.join(save_path, "transformed_images")
+    os.makedirs(step_2_save_path, exist_ok=True)
+    for item in all_section:
+        ori_dapi_path = os.path.join(step_1_save_path, str(item) + ".PNG")
+        transformed_path = os.path.join(step_2_save_path, str(item) + ".tiff")
+        command = "vips tiffsave " + ori_dapi_path + " " + transformed_path + " --tile --pyramid"
+        print(command)
+        os.system(command)
+    return all_section
 
 
-def draw_point(point_path, img_path, save_path):
-    coor = pd.read_csv(point_path, sep=",", header=0)
-    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
-
-    coor_img = np.zeros(img.shape)
-    for ig, item_5 in coor.iterrows():
-        cv2.circle(coor_img, (int(item_5["col"]), int(item_5["row"])), radius=10, color=(255, 255, 255), thickness=-1)
-
-    cv2.imwrite(save_path, coor_img)
-
-
-def adjust_img_nucleus_rna(section_name, data_path, save_path):
-    max_row_col = [0, 0]
-    for item_2 in section_name:
-        o_path = find_dapi_img(os.path.join(data_path, str(item_2)))
-        o_dapi = cv2.imread(o_path, cv2.IMREAD_GRAYSCALE)
-        if o_dapi.shape[0] > max_row_col[0]:
-            max_row_col[0] = o_dapi.shape[0]
-        if o_dapi.shape[1] > max_row_col[1]:
-            max_row_col[1] = o_dapi.shape[1]
-
-    row_add = int(max_row_col[0] / 2)
-    col_add = int(max_row_col[1] / 2)
-    max_row_col[0] += row_add
-    max_row_col[1] += col_add
-
-    for item_3 in section_name:
-        base_dir = os.path.join(save_path, str(item_3), "2_Aligned_result")
-        new_img = np.zeros(tuple(max_row_col))
-        o_path = find_dapi_img(os.path.join(data_path, str(item_3)))
-        o_dapi = cv2.imread(o_path, cv2.IMREAD_GRAYSCALE)
-        row_shift = int(row_add / 2)
-        col_shift = int(col_add / 2)
-        new_img[row_shift:row_shift + o_dapi.shape[0], col_shift:col_shift + o_dapi.shape[1]] = o_dapi
-        cv2.imwrite(os.path.join(base_dir, "adjust_img.PNG"), new_img)
-
-        cell_center = pd.read_csv(
-            os.path.join(save_path, str(item_3), "1_nucleus_recongnition_result", "filtered_cell_center.csv"), sep=",",
-            header=0)
-        cell_center["row"] += row_shift
-        cell_center["col"] += col_shift
-        cell_center.to_csv(os.path.join(base_dir, "adjust_cell_center.csv"), sep=",", header=True, index=False)
-        draw_point(os.path.join(base_dir, "adjust_cell_center.csv"), os.path.join(base_dir, "adjust_img.PNG"),
-                   os.path.join(base_dir, "adjust_cell_center.PNG"))
-
-        rna_coor = pd.read_csv(
-            os.path.join(data_path, str(item_3), "rna_coordinate.csv"), sep=",",
-            header=0)
-        rna_coor["row"] += row_shift
-        rna_coor["col"] += col_shift
-        rna_coor.to_csv(os.path.join(base_dir, "adjust_rna_coordinate.csv"), sep=",",
-                        header=True, index=False)
-        draw_point(os.path.join(base_dir, "adjust_rna_coordinate.csv"), os.path.join(base_dir, "adjust_img.PNG"),
-                   os.path.join(base_dir, "adjust_rna_coordinate.PNG"))
+def generate_alinged_need_dir(results_dst_dir, aligned_need_dir, aligned_path, section):
+    # construct the folder aligned
+    shutil.copyfile(os.path.join(results_dst_dir, "transformed_images", str(section) + ".tiff"),
+                    os.path.join(aligned_need_dir, str(2) + ".tiff"))
+    if section == 2:
+        shutil.copyfile(os.path.join(results_dst_dir, "transformed_images", str(section - 1) + ".tiff"),
+                        os.path.join(aligned_need_dir, str(1) + ".tiff"))
+    else:
+        last_aligned_path = os.path.join(aligned_need_dir, str(1) + ".tiff")
+        command = "vips tiffsave " + os.path.join(aligned_path, str(section - 1),
+                                                  "DAPI.PNG") + " " + last_aligned_path + " --tile --pyramid"
+        os.system(command)
 
 
-def find_centroid(section_name, save_path):
-    in_centroid = [0, 0]
-    in_all_centroid = []
-    for item_4 in section_name:
-        in_adjust_coor = pd.read_csv(os.path.join(save_path, str(item_4), "2_Aligned_result", "adjust_cell_center.csv"),
-                                     sep=",", header=0)
-        row = int(sum(in_adjust_coor["row"]) / in_adjust_coor.shape[0])
-        col = int(sum(in_adjust_coor["col"]) / in_adjust_coor.shape[0])
-        in_all_centroid.append([row, col])
-        if row > in_centroid[0] and col > in_centroid[1]:
-            in_centroid[0] = row
-            in_centroid[1] = col
-        img = cv2.imread(os.path.join(save_path, str(item_4), "2_Aligned_result", "adjust_img.PNG"))
-        cv2.circle(img=img, center=(col, row), radius=20, color=(255, 255, 255),
-                   thickness=-1, lineType=None, shift=None)
-        cv2.imwrite(os.path.join(save_path, str(item_4), "2_Aligned_result", "adjust_img_centroid.PNG"), img)
-    return in_centroid, in_all_centroid
+def transform_rna(save_path, bk_img, M, rna_file, nucleus_coor_file, padding, shift, crop):
+    transform = np.array([[M[0], M[1]],
+                      [M[2], M[3]]])
+
+    rna_coor = pd.read_csv(rna_file, sep=",", header=0)
+    np_rna_coor = rna_coor[["row", "col"]].to_numpy()
+
+    # adding padding
+    np_rna_coor += np.array([padding - int(shift[1]), padding - int(shift[0])])
+
+    # scale and rotation
+    aligned_np_rna_coor = np.dot(np_rna_coor, transform)
+    aligned_np_rna_coor -= np.array([int(crop[1]), int(crop[0])])
+
+    aligned_rna_coor = pd.DataFrame(aligned_np_rna_coor)
+    aligned_rna_coor.rename({0: "row", 1: "col"}, axis=1, inplace=True)
+    aligned_rna_coor["gene"] = rna_coor["gene"]
+    aligned_rna_coor.to_csv(os.path.join(save_path, "aligned_rna_coordinate.csv"), sep=",", header=True, index=False)
+
+    draw_point(aligned_rna_coor, bk_img, save_path)
+
+    # transform nucleus coor
+    nucleus_coor = pd.read_csv(nucleus_coor_file, sep=",", header=0)
+    np_nucleus_coor = nucleus_coor[["row", "col"]].to_numpy()
+
+    np_nucleus_coor += np.array([padding - int(shift[1]), padding - int(shift[0])])
+    aligned_np_nucleus_coor = np.dot(np_nucleus_coor, transform)
+    aligned_np_nucleus_coor -= np.array([int(crop[1]), int(crop[0])])
+
+    aligned_nucleus_coor = pd.DataFrame(aligned_np_nucleus_coor)
+    aligned_nucleus_coor.rename({0: "row", 1: "col"}, axis=1, inplace=True)
+    aligned_nucleus_coor["area"] = nucleus_coor["area"]
+    aligned_nucleus_coor["cell_index"] = nucleus_coor["cell_index"]
+    aligned_nucleus_coor.to_csv(os.path.join(save_path, "aligned_cell_center.csv"), sep=",", header=True, index=False)
 
 
-def draw_overlap_img(img_1_path, img_2_path, save_path):
-    img_1 = cv2.imread(img_1_path, cv2.IMREAD_GRAYSCALE)
-    img_2 = cv2.imread(img_2_path, cv2.IMREAD_GRAYSCALE)
-    merge_img = np.zeros((img_1.shape[0], img_1.shape[1], 3))
-    merge_img[:, :, 1] = img_1
-    merge_img[:, :, 2] = img_2
-
-    cv2.imwrite(save_path, merge_img)
 
 
-def shift_img(section_name, in_centroid, in_all_centroid, save_path):
-    for item_5 in section_name:
-        base_dir = os.path.join(save_path, str(item_5), "2_Aligned_result")
-        o_img = cv2.imread(os.path.join(base_dir, "adjust_img.PNG"), cv2.IMREAD_GRAYSCALE)
-        row_shift = in_centroid[0] - in_all_centroid[section_name.index(item_5)][0]
-        col_shift = in_centroid[1] - in_all_centroid[section_name.index(item_5)][1]
-        m = np.float32([[1, 0, col_shift], [0, 1, row_shift]])
-        in_shift_img = cv2.warpAffine(o_img, m, (o_img.shape[1], o_img.shape[0]))
-        cv2.imwrite(os.path.join(base_dir, "shift_img.PNG"), in_shift_img)
+def sb_step(registrar, save_path):
+    def cnames_from_filename(src_f):
+        f = valtils.get_name(src_f)
+        return ["DAPI"] + f.split(" ")
 
-        temp_img = copy.copy(o_img)
-        cv2.circle(img=temp_img, center=(in_centroid[1], in_centroid[0]), radius=20, color=(255, 255, 255),
-                   thickness=-1, lineType=None, shift=None)
-        temp_img = cv2.warpAffine(temp_img, m, (temp_img.shape[1], temp_img.shape[0]))
-        cv2.imwrite(os.path.join(base_dir, "shift_img_centroid.PNG"), temp_img)
+    channel_name_dict = {f: cnames_from_filename(f) for
+                         f in registrar.original_img_list}
+    dst_f = os.path.join(save_path, registrar.name, registrar.name + ".tiff")
+    merged_img, channel_names, ome_xml = registrar.warp_and_merge_slides(dst_f,
+                                                                         channel_name_dict=None,
+                                                                         drop_duplicates=True,
+                                                                         non_rigid=False, crop=True)
+    return merged_img
 
-        cell_center = pd.read_csv(os.path.join(base_dir, "adjust_cell_center.csv"), sep=",", header=0)
-        cell_center["row"] += row_shift
-        cell_center["col"] += col_shift
-        cell_center.to_csv(os.path.join(base_dir, "shift_cell_center.csv"), sep=",", header=True, index=False)
-        draw_point(os.path.join(base_dir, "shift_cell_center.csv"), os.path.join(base_dir, "shift_img.PNG"),
-                   os.path.join(base_dir, "shift_cell_center.PNG"))
 
-        rna_coor = pd.read_csv(os.path.join(base_dir, "adjust_rna_coordinate.csv"), sep=",", header=0)
-        rna_coor["row"] += row_shift
-        rna_coor["col"] += col_shift
-        rna_coor.to_csv(os.path.join(base_dir, "shift_rna_coordinate.csv"), sep=",", header=True, index=False)
-        draw_point(os.path.join(base_dir, "shift_rna_coordinate.csv"), os.path.join(base_dir, "shift_img.PNG"),
-                   os.path.join(base_dir, "shift_rna_coordinate.PNG"))
+def align_image(data_path, output_path, grayscale_threshold, padding):
+    result_save_path = os.path.join(output_path, "3_aligned_result")
 
-        if int(item_5) == 1:
-            continue
+    # Convert the image data format using VIPS.
+    all_section = preprocessed_images(data_path, result_save_path, grayscale_threshold, padding)
+
+    # calculate the transform matrix
+    print("all section:", all_section)
+
+    registration_result_path = os.path.join(result_save_path, "registration_temp_file")
+    os.makedirs(registration_result_path, exist_ok=True)
+
+    aligned_debug_path = os.path.join(result_save_path, "aligned_debug_img")
+    os.makedirs(aligned_debug_path, exist_ok=True)
+
+    final_aligned_path = os.path.join(result_save_path, "aligned_result")
+    os.makedirs(final_aligned_path, exist_ok=True)
+
+    print("--------strating aligned--------")
+    # all_section[1:]
+    for item in all_section[1:]:
+        print("section:", item)
+        this_section_debug_save_path = os.path.join(aligned_debug_path, str(item))
+        os.makedirs(this_section_debug_save_path, exist_ok=True)
+
+        this_section_aligned_save_path = os.path.join(final_aligned_path, str(item))
+
+        aligned_need_dir = os.path.join(result_save_path, "aligned_need_dir", str(item))
+        os.makedirs(aligned_need_dir, exist_ok=True)
+
+        # construct the folder aligned
+        generate_alinged_need_dir(result_save_path, aligned_need_dir, aligned_debug_path, item)
+
+        registration_temp_path = os.path.join(registration_result_path, str(item))
+        registrar = registration.Valis(aligned_need_dir, registration_temp_path, reference_img_f="1.tiff",
+                                       align_to_reference=True, imgs_ordered=True, non_rigid_registrar_cls=None,
+                                       do_rigid=True)
+
+        rigid_registrar, non_rigid_registrar, error_df = registrar.register()
+        merged_img = sb_step(registrar, registration_result_path)
+
+        image_array = np.ndarray(buffer=merged_img.write_to_memory(), dtype=np.uint8,
+                                 shape=[merged_img.height, merged_img.width, merged_img.bands])
+
+        # save the aligned img
+        new_img = np.zeros((image_array.shape[0], image_array.shape[1], 3))
+        new_img[:, :, 0] = image_array[:, :, 0]
+        new_img[:, :, 1] = image_array[:, :, 1]
+        cv2.imwrite("/".join([this_section_debug_save_path, "aligned_merge.PNG"]), new_img)
+        cv2.imwrite("/".join([this_section_aligned_save_path, "DAPI.PNG"]), image_array[:, :, 1])
+
+        # transform RNA and DAPI
+        if item == 2:
+            ref_img = cv2.imread("/".join([aligned_need_dir, "1.tiff"]), cv2.IMREAD_GRAYSCALE)
         else:
-            path = os.path.join(save_path, str(int(item_5) - 1), "2_Aligned_result", "shift_img_centroid.PNG")
-            draw_overlap_img(path, os.path.join(base_dir, "shift_img.PNG"),
-                             os.path.join(base_dir,
-                                          str(int(item_5) - 1) + "_" + str(int(item_5)) + "_shift_img_centroid.PNG"))
+            ref_img = cv2.imread("/".join([aligned_debug_path, str(item - 1), "DAPI.PNG"]), cv2.IMREAD_GRAYSCALE)
+
+        ori_img_py = pyvips.Image.new_from_file(os.path.join(result_save_path, "revised_images", str(item) + ".PNG"))
+        tx_ty = pd.read_csv("./tx_ty.csv", sep=",", header=0)
+        tx = tx_ty["tx"].values
+        ty = tx_ty["ty"].values
+        M = list(pd.read_csv("./final_m.csv", sep=",", header=0)["M"].values)
+        out_shape = registrar.aligned_slide_shape_rc
+        slide_bbox_xywh = registrar.slide_dict["2"].slide_bbox_xywh
+
+        rotate_info = pd.DataFrame()
+        rotate_info["tx"] = tx
+        rotate_info["ty"] = ty
+        rotate_info["M"] = str(M)
+        rotate_info["out_shape"] = str([out_shape[0], out_shape[1]])
+        rotate_info["slide_bbox_xywh"] = str([slide_bbox_xywh[0], slide_bbox_xywh[1]])
+        rotate_info["padding"] = padding
+        rotate_info.to_csv("/".join([this_section_debug_save_path, "rotation_infomation.csv"]), sep=",", header=True,
+                           index=False)
+
+        aligned_img = ori_img_py.affine(M, oarea=[0, 0, out_shape[1], out_shape[0]],
+                                        interpolate=pyvips.Interpolate.new("bicubic"),
+                                        idx=-tx,
+                                        idy=-ty,
+                                        premultiplied=True,
+                                        background=[0],
+                                        extend=pyvips.enums.Extend.BLACK
+                                        )
+        warp_img = aligned_img.extract_area(*slide_bbox_xywh)
+        aligned_img = warp_img.numpy()
+
+        merge_py_img_2 = np.zeros((ref_img.shape[0], ref_img.shape[1], 3))
+        merge_py_img_2[:, :, 0] = ref_img
+        merge_py_img_2[:, :, 1] = aligned_img
+        cv2.imwrite("/".join([this_section_debug_save_path, "pv_aligned_img.PNG"]), merge_py_img_2)
+
+        # transformer rna and nucleus coor
+        rna_file = os.path.join(data_path, str(item), "rna_coordinate.csv")
+        nucleus_coor = os.path.join(output_path, str(item), "2_gem/final_cell_center_coordinate.csv")
+        shift = (tx, ty)
+        transform_rna(this_section_aligned_save_path, image_array[:, :, 1], M, rna_file, nucleus_coor, padding, shift,
+                      slide_bbox_xywh[0:2])
+
+    registration.kill_jvm()
 
 
-def bina_img(img, threshold):
-    img[img < threshold] = 0
-    img[img >= threshold] = 255
-    return img
-
-
-def img_dilate(img, time):
-    kernel = np.ones((9, 9), np.uint8)
-    img = cv2.dilate(img, kernel, iterations=time)
-    return img
-
-
-def fiter_nosie(img, threshold):
-    _, labels, stats, centroids = cv2.connectedComponentsWithStats(img)
-    for stat in stats:
-        if stat[4] < threshold:
-            img[stat[1]:stat[1] + stat[3], stat[0]:stat[0] + stat[2]] = 0
-    return img
-
-
-def calculate_difference(img_1, img_2):
-    in_distance = abs(img_2 - img_1)
-    in_distance = int(in_distance.sum() / 255)
-    return in_distance
-
-
-def shift_nucleus_and_signal(nucleus_path, signal_path, add_row, add_col, save_dir):
-    nucleus = pd.read_csv(nucleus_path, sep=",", header=0)
-    nucleus["row"] += add_row
-    nucleus["col"] += add_col
-    nucleus.to_csv(os.path.join(save_dir, "shift_cell_center.csv"), sep=",", header=True, index=False)
-
-    signal = pd.read_csv(signal_path, sep=",", header=0)
-    signal["row"] += add_row
-    signal["col"] += add_col
-    signal.to_csv(os.path.join(save_dir, "shift_rna_coordinate.csv"), sep=",", header=True, index=False)
-
-
-def rotate_nucleus_and_signal(coor_path, rotate_angle, rotate_center, save_path):
-    coor = pd.read_csv(coor_path, sep=",", header=0)
-    coor["row"] = rotate_center[0] - coor["row"]
-    coor["col"] = coor["col"] - rotate_center[1]
-
-    coor["z"] = np.sqrt(coor["row"] ** 2 + coor["col"] ** 2)
-
-    coor["angle"] = np.arctan2(coor["row"], coor["col"]) + rotate_angle / 180 * math.pi
-
-    coor["row"] = np.trunc(coor["z"] * np.sin(coor["angle"]))
-    coor["col"] = np.trunc(coor["z"] * np.cos(coor["angle"]))
-
-    coor["row"] = rotate_center[0] - coor["row"]
-    coor["col"] = rotate_center[1] + coor["col"]
-
-    coor.drop(["z", "angle"], axis=1, inplace=True)
-    coor.to_csv(save_path, sep=",", header=True, index=False)
-
-
-def align_section(data_path, output_path, gray_value_threshold):
-    star_time = time.time()
-    all_section = sorted([int(i) for i in os.listdir(data_path)])
-
-    creat_dir(all_section, output_path)
-
-    adjust_img_nucleus_rna(all_section, data_path, output_path)
-
-    # find centroid
-    centroid, all_centroid = find_centroid(all_section, output_path)
-
-    # adjust centriod
-    shift_img(all_section, centroid, all_centroid, output_path)
-
-    iter_time_1 = 5
-    iter_time_2 = 5
-    area_threshold = 10000
-    scale = 1 / 10
-    for item_9 in all_section:
-        output_base_dir = os.path.join(output_path, str(item_9), "2_Aligned_result")
-        cell_center_path = os.path.join(output_base_dir, "shift_cell_center.csv")
-        cell_center_save_path = os.path.join(output_base_dir, "rotate_cell_center.csv")
-        rna_coordinate_path = os.path.join(output_base_dir, "shift_rna_coordinate.csv")
-        rna_coordinate_save_path = os.path.join(output_base_dir, "rotate_rna_coordinate.csv")
-
-        if item_9 == 1:
-            align_img = cv2.imread(os.path.join(output_base_dir, "shift_img.PNG"))
-            cv2.imwrite(os.path.join(output_base_dir, "align_img.PNG"), align_img)
-            shutil.copy(cell_center_path, cell_center_save_path)
-            shutil.copy(rna_coordinate_path, rna_coordinate_save_path)
-            continue
-        else:
-            ref_img_path = os.path.join(output_path, str(int(item_9) - 1), "2_Aligned_result", "align_img.PNG")
-            need_alig_img_path = os.path.join(output_base_dir, "shift_img.PNG")
-            ref_img = cv2.imread(ref_img_path, cv2.IMREAD_GRAYSCALE)
-            need_align_img = cv2.imread(need_alig_img_path, cv2.IMREAD_GRAYSCALE)
-
-        # Binarization
-        ref_img = bina_img(ref_img, gray_value_threshold)
-        need_align_img = bina_img(need_align_img, gray_value_threshold)
-
-        # dilation and erosion
-        dilate_ref_img = img_dilate(ref_img, iter_time_1)
-        filter_ref_img = fiter_nosie(dilate_ref_img, area_threshold)
-
-        dilate_need_align_img = img_dilate(need_align_img, iter_time_1)
-        filter_need_align_img = fiter_nosie(dilate_need_align_img, area_threshold)
-
-        final_ref_img = img_dilate(filter_ref_img, iter_time_2)
-        final_need_align_img = img_dilate(filter_need_align_img, iter_time_2)
-
-        # resize img
-        resize_ref_img = cv2.resize(final_ref_img, (int(final_ref_img.shape[1] * scale),
-                                                    int(final_ref_img.shape[0] * scale)),
-                                    interpolation=cv2.INTER_NEAREST)
-
-        resize_need_align_img = cv2.resize(final_need_align_img, (int(final_need_align_img.shape[1] * scale),
-                                                                  int(final_need_align_img.shape[0] * scale)),
-                                           interpolation=cv2.INTER_NEAREST)
-
-        # calculate diffence
-        min_difference = calculate_difference(resize_ref_img, resize_need_align_img)
-
-        totate_angle = 0
-        for i in range(1, 361):
-            m_rotate = cv2.getRotationMatrix2D((int(centroid[1] / 10), int(centroid[0] / 10)), i, 1)
-            rotate_img = cv2.warpAffine(resize_need_align_img, m_rotate, (resize_need_align_img.shape[1],
-                                                                          resize_need_align_img.shape[0]),
-                                        flags=cv2.INTER_NEAREST, borderValue=0)
-
-            difference = calculate_difference(resize_ref_img, rotate_img)
-            if difference < min_difference:
-                min_difference = difference
-                totate_angle = i
-
-        o_img_1 = cv2.imread(need_alig_img_path, cv2.IMREAD_GRAYSCALE)
-        rotate_o = cv2.getRotationMatrix2D((centroid[1], centroid[0]), totate_angle, 1)
-        rotate_img_o = cv2.warpAffine(o_img_1, rotate_o, (o_img_1.shape[1], o_img_1.shape[0]),
-                                      flags=cv2.INTER_NEAREST, borderValue=0)
-        cv2.imwrite(os.path.join(output_base_dir, "align_img.PNG"), rotate_img_o)
-
-        rotate_nucleus_and_signal(cell_center_path, totate_angle, centroid, cell_center_save_path)
-        rotate_nucleus_and_signal(rna_coordinate_path, totate_angle, centroid, rna_coordinate_save_path)
-
-        draw_nucleus_save_path = os.path.join(output_base_dir, "rotate_cell_center.PNG")
-        draw_signal_save_path = os.path.join(output_base_dir, "rotate_rna_coordinate.PNG")
-        draw_point(cell_center_save_path, ref_img_path, draw_nucleus_save_path)
-        draw_point(rna_coordinate_save_path, ref_img_path, draw_signal_save_path)
-
-        ref_img_1 = cv2.imread(ref_img_path, cv2.IMREAD_GRAYSCALE)
-        merge_img = np.zeros((o_img_1.shape[0], o_img_1.shape[1], 3))
-        merge_img[:, :, 1] = ref_img_1
-        merge_img[:, :, 2] = rotate_img_o
-
-        cv2.imwrite(os.path.join(output_base_dir, "debug_merge.PNG"), merge_img)
-
-    print("alinged section finished, runtime:", time.time() - star_time)
+if __name__ == "__main__":
+    data_apth = "../ISS_DATA"
+    result_save_path = "../ISS_registration_results"
+    Grayscale_threshold_a = 5
+    padding_a = 1000
+    align_image(data_apth, result_save_path, Grayscale_threshold_a, padding_a)

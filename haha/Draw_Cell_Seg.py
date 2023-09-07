@@ -16,15 +16,25 @@ def draw_cell_seg(data_path, output_path, flag):
     for item in all_section:
         save_path = os.path.join(output_path, item, "4_cell_segmentation_image")
         os.makedirs(save_path, exist_ok=True)
-        cell_center = pd.read_csv(os.path.join(output_path, item, "3_gem", "filtered_cell_center_coordinate.csv"), sep=",",
-                                  header=0)
-        cell_and_rna = pd.read_csv(os.path.join(output_path, item, "3_gem", "filtered_RNA_and_nearest_cell.csv"), sep=",",
-                                   header=0)
 
         if flag == 0:
             dapi = Image.open(os.path.join(data_path, item, "DAPI.tif"))
+            cell_center = pd.read_csv(os.path.join(output_path, item, "2_gem/filtered_cell_center_coordinate.csv"),
+                                      sep=",",
+                                      header=0)
+            cell_and_rna = pd.read_csv(os.path.join(output_path, item, "2_gem/filtered_RNA_and_nearest_cell.csv"),
+                                       sep=",",
+                                       header=0)
         else:
-            dapi = Image.open(os.path.join(output_path, item, "2_Aligned_result", "align_img.PNG"))
+            dapi = Image.open(os.path.join(output_path, item, "3_aligned_result/aligned_result/DAPI.PNG"))
+            cell_center = pd.read_csv(
+                os.path.join(output_path, item, "3_aligned_result/aligned_result/aligned_cell_center.csv"),
+                sep=",",
+                header=0)
+            cell_and_rna = pd.read_csv(
+                os.path.join(output_path, item, "3_aligned_result/aligned_result/aligned_rna_coordinate.csv"),
+                sep=",",
+                header=0)
 
         img = np.zeros((dapi.height, dapi.width, 3), dtype=np.uint8)
         img[:, :, :] = 255
