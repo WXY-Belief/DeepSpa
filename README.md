@@ -1,15 +1,16 @@
 # DeepSpa
 ## 1.Introduction
-This repository include an available learning-based cell segmentation tool for DeepSpa that analyse subcellular resolution spatial transcriptomics.In order to provide users with an experience, we have provided a example data in this project. Please refer to **Example data** for details. **For a tutorial on nuclear segmentation training, please refer to Nuclear_segmentation_model/README.md.**
+This repository includes a learning-based cell segmentation tool for DeepSpa, which analyzes subcellular resolution spatial transcriptomics. To enhance the user experience, we have provided example data within this project. For more details, please refer to the "Example Data" section. **If you are looking for a tutorial and code on nuclear segmentation training, you can find it in the "Nuclear_segmentation_model/README.md" file**.
 ## 2.Prerequisites
 To install requirements:  
 ```
 pip install -r requirements.txt
 ```  
 - Python 3.8.13  
-- GPU Memory: 3GB+  
+- GPU Memory: 3GB+
+
+**Note: Please download the pre training weights from https://drive.google.com/drive/folders/1nhc-Cy8ScGtekdCRjtVbvxkAYxo_hki1 before use. Do not modify the name of the weights and place them into the ./haha/deep_learning_model/final_model directory.** 
 ## 3.Tutorial
-**Note: Please download the pre training weights from https://drive.google.com/drive/folders/1nhc-Cy8ScGtekdCRjtVbvxkAYxo_hki1 before use, do not modify the name of the weights and put them into ./haha/deep_learing_model/final_model/**
 ### Directory structure of input data
 The sections are numerically named, starting from 1 for the top layer. The DAPI images are in TIFF, PNG, or JPEG format, while the RNA coordinate file must be in CSV format.The directory structure is as follows:  
 
