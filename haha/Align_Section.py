@@ -127,7 +127,7 @@ def sb_step(registrar, save_path):
     return merged_img
 
 
-def align_image(data_path, output_path, grayscale_threshold, padding):
+def align_section(data_path, output_path, grayscale_threshold, padding: int=1000):
     result_save_path = os.path.join(output_path, "3_aligned_result")
 
     # Convert the image data format using VIPS.
