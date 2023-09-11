@@ -9,7 +9,7 @@ pip install -r requirements.txt
 - Python 3.8.13  
 - GPU Memory: 3GB+
 
-**Note 1: Please download the pre training weights from https://drive.google.com/drive/folders/1nhc-Cy8ScGtekdCRjtVbvxkAYxo_hki1 before use. Do not modify the name of the weights and place them into the ./haha/deep_learning_model/final_model directory.**  
+**Note 1: Please download the pre training weights from https://figshare.com/account/articles/24117366 before use. Do not modify the name of the weights and place them into the ./haha/deep_learning_model/final_model directory.**  
 **Note 2: Because we use VALIS to align the slices, you need to install the packages required by VALIS on [GitHub.](https://github.com/MathOnco/VALIS).** 
 ## 3.Tutorial
 ### Directory structure of input data
