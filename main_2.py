@@ -20,19 +20,22 @@ def main(config_path):
     # 5.Cell type map
     cell_type_annotation_mode = all_parameter["cell_type_annotation_mode"]
     sc_data_path = all_parameter["sc_data_path"]
-    if cell_type_annotation_mode == 1:
-        cell_type_map(data_path, output_path, sc_data_path, device)
-    else:
-        all_section = os.listdir(data_path)
-        for item in all_section:
-            os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
+    # if cell_type_annotation_mode == 1:
+    #     cell_type_map(data_path, output_path, sc_data_path, device)
+    # else:
+    #     all_section = os.listdir(data_path)
+    #     for item in all_section:
+    #         os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
 
     # merge result of all section
     all_section_cell_center = pd.DataFrame()
     all_section_cell_type = pd.DataFrame()
     all_result_save_path = os.path.join(output_path, "all_section_result")
     for item in os.listdir(data_path):
-        cell_center_path = os.path.join(output_path, item, "3_gem", "filtered_cell_center_coordinate.csv")
+        if flag == 1:
+            cell_center_path = os.path.join(output_path, item, "3_aligned_result/aligned_cell_center_coordinate.csv")
+        else:
+            cell_center_path = os.path.join(output_path, item, "2_gem", "filtered_cell_center_coordinate.csv")
         cell_type_path = os.path.join(output_path, item, "5_cell_type_result", "cell_type.csv")
 
         cell_center = pd.read_csv(cell_center_path, sep=",", header=0)
@@ -50,8 +53,8 @@ def main(config_path):
         all_section_cell_type.to_csv(os.path.join(all_result_save_path, "cell_type.csv"), sep=",", header=True,
                                      index=False)
 
-    # 5_1.Draw cell type map
-    draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path, output_path, flag)
+    # # 5_1.Draw cell type map
+    # draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path, output_path, flag)
 
     # 7.find anatomic regions
     K = all_parameter["K"]

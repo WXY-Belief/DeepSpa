@@ -12,27 +12,27 @@ Image.MAX_IMAGE_PIXELS = None
 
 def draw_cell_seg(data_path, output_path, flag):
     star_time = time.time()
-    all_section = os.listdir(data_path)
+    all_section = sorted([int(i) for i in os.listdir(data_path)])
     for item in all_section:
-        save_path = os.path.join(output_path, item, "4_cell_segmentation_image")
+        save_path = os.path.join(output_path, str(item), "4_cell_segmentation_image")
         os.makedirs(save_path, exist_ok=True)
 
         if flag == 0:
-            dapi = Image.open(os.path.join(data_path, item, "DAPI.tif"))
-            cell_center = pd.read_csv(os.path.join(output_path, item, "2_gem/filtered_cell_center_coordinate.csv"),
+            dapi = Image.open(os.path.join(data_path, str(item), "DAPI.tif"))
+            cell_center = pd.read_csv(os.path.join(output_path, str(item), "2_gem/filtered_cell_center_coordinate.csv"),
                                       sep=",",
                                       header=0)
-            cell_and_rna = pd.read_csv(os.path.join(output_path, item, "2_gem/filtered_RNA_and_nearest_cell.csv"),
+            cell_and_rna = pd.read_csv(os.path.join(output_path, str(item), "2_gem/filtered_RNA_and_nearest_cell.csv"),
                                        sep=",",
                                        header=0)
         else:
-            dapi = Image.open(os.path.join(output_path, item, "3_aligned_result/aligned_result/DAPI.PNG"))
+            dapi = Image.open(os.path.join(output_path, str(item), "3_aligned_result/DAPI.PNG"))
             cell_center = pd.read_csv(
-                os.path.join(output_path, item, "3_aligned_result/aligned_result/aligned_cell_center.csv"),
+                os.path.join(output_path, str(item), "3_aligned_result/aligned_cell_center_coordinate.csv"),
                 sep=",",
                 header=0)
             cell_and_rna = pd.read_csv(
-                os.path.join(output_path, item, "3_aligned_result/aligned_result/aligned_rna_coordinate.csv"),
+                os.path.join(output_path, str(item), "3_aligned_result/aligned_RNA_and_nearest_cell.csv"),
                 sep=",",
                 header=0)
 

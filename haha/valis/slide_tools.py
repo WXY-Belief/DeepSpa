@@ -285,6 +285,21 @@ def warp_slide(src_f, transformation_src_shape_rc, transformation_dst_shape_rc,
     if M is None and dxdy is None:
         return vips_slide
 
+    image_array = np.ndarray(buffer=vips_slide.write_to_memory(),
+                             dtype=np.uint8,
+                             shape=[vips_slide.height, vips_slide.width, vips_slide.bands])
+    print(image_array.shape, image_array[:, :, 0].shape)
+
+
+    print("M", M)
+    print("dxdy:", dxdy)
+    print("transformation_dst_shape_rc", transformation_dst_shape_rc)
+    print("out_shape_rc", aligned_slide_shape_rc)
+
+    print("transformation_src_shape_rc", transformation_src_shape_rc)
+    print("bbox_xywh", bbox_xywh)
+    print("bg_color", bg_color)
+    print("interp_method", interp_method)
     vips_warped = warp_tools.warp_img(img=vips_slide, M=M, bk_dxdy=dxdy,
                                       transformation_dst_shape_rc=transformation_dst_shape_rc,
                                       out_shape_rc=aligned_slide_shape_rc,

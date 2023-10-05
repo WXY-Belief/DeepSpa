@@ -848,6 +848,7 @@ class Slide(object):
             Interpolation method used when warping slide. Default is "bicubic"
 
         """
+        print("---------------warp_slide---------------")
         if src_f is None:
             src_f = self.src_f
 
@@ -890,6 +891,7 @@ class Slide(object):
         else:
             bg_color = None
 
+        print("slide_bbox_xywh", bg_color)
         self.slide_bbox_xywh = slide_bbox_xywh
         warped_slide = slide_tools.warp_slide(src_f, M=self.M,
                                               transformation_src_shape_rc=self.processed_img_shape_rc,
@@ -4423,6 +4425,11 @@ class Valis(object):
         all_channel_names = []
         merged_slide = None
 
+        print("src_f_list:", src_f_list)
+        print("self.slide_dict", self.slide_dict)
+        print("level", level)
+        print("non_rigid", non_rigid)
+        print("interp_method", interp_method)
         for f in src_f_list:
             slide_name = valtils.get_name(os.path.split(f)[1])
             slide_obj = self.slide_dict[slide_name]
@@ -4430,6 +4437,22 @@ class Valis(object):
             warped_slide = slide_obj.warp_slide(level, non_rigid=non_rigid,
                                                 crop=crop,
                                                 interp_method=interp_method)
+            ## ## ## ## ## ## ## ##
+            image_array = np.ndarray(buffer=warped_slide.write_to_memory(),
+                                     dtype=np.uint8,
+                                     shape=[warped_slide.height, warped_slide.width, warped_slide.bands])
+            print("haha")
+            print(image_array.shape, image_array[:, :, 0].shape)
+            import cv2
+            flag = True
+            n = 1
+            while flag:
+                if os.path.exists("./1.PNG") and os.path.exists("./1_" + str(n) + ".PNG"):
+                    n += 1
+                else:
+                    cv2.imwrite("./1_" + str(n) + ".PNG", image_array[:, :, 0])
+                    flag = False
+            ## ## ## ## ## ## ## ##
 
             keep_idx = list(range(warped_slide.bands))
             if channel_name_dict is not None:

@@ -74,7 +74,12 @@ def draw_anatomic_region_map(all_section_cell_center, all_section_anatomic_regio
 
     for item in all_section:
         save_path = os.path.join(output_path, str(item), "7_anatomic_region_result")
-        rna_and_nearest_cell_path = os.path.join(output_path, str(item), "2_gem", "filtered_RNA_and_nearest_cell.csv")
+        if flag == 1:
+            rna_and_nearest_cell_path = os.path.join(output_path, str(item), "3_aligned_result",
+                                                     "aligned_RNA_and_nearest_cell.csv")
+        else:
+            rna_and_nearest_cell_path = os.path.join(output_path, str(item), "2_gem",
+                                                     "filtered_RNA_and_nearest_cell.csv")
         rna_and_nearest_cell = pd.read_csv(rna_and_nearest_cell_path, sep=",", header=0)
 
         cell_center = all_section_cell_center[all_section_cell_center["section"] == item]
@@ -83,7 +88,7 @@ def draw_anatomic_region_map(all_section_cell_center, all_section_anatomic_regio
         if flag == 0:
             DAPI = Image.open(os.path.join(data_path, str(item), "DAPI.tif"))
         else:
-            DAPI = Image.open(os.path.join(output_path, str(item), "3_aligned_result/aligned_result/DAPI.PNG"))
+            DAPI = Image.open(os.path.join(output_path, str(item), "3_aligned_result/DAPI.PNG"))
 
         merge_data = pd.merge(anatomic_region, cell_center, on="cell_index")
         img = np.zeros((DAPI.height, DAPI.width, 3), dtype=np.uint8)

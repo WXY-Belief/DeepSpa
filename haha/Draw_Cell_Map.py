@@ -10,6 +10,7 @@ import plotly
 import plotly.graph_objects as go
 import copy
 from PIL import Image
+
 Image.MAX_IMAGE_PIXELS = None
 warnings.filterwarnings("ignore")
 
@@ -75,8 +76,12 @@ def draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path
     for item in all_section:
         save_path = os.path.join(output_path, str(item), "6_cell_type_map_images")
         os.makedirs(save_path, exist_ok=True)
-
-        rna_and_nearest_cell_path = os.path.join(output_path, str(item), "2_gem", "filtered_RNA_and_nearest_cell.csv")
+        if flag == 1:
+            rna_and_nearest_cell_path = os.path.join(output_path, str(item), "3_aligned_result",
+                                                     "aligned_RNA_and_nearest_cell.csv")
+        else:
+            rna_and_nearest_cell_path = os.path.join(output_path, str(item), "2_gem",
+                                                     "filtered_RNA_and_nearest_cell.csv")
         rna_and_nearest_cell = pd.read_csv(rna_and_nearest_cell_path, sep=",", header=0)
 
         cell_center = all_section_cell_center[all_section_cell_center["section"] == item]
@@ -85,7 +90,7 @@ def draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path
         if flag == 0:
             DAPI = Image.open(os.path.join(data_path, str(item), "DAPI.tif"))
         else:
-            DAPI = Image.open(os.path.join(output_path, str(item), "3_aligned_result/aligned_result/DAPI.PNG"))
+            DAPI = Image.open(os.path.join(output_path, str(item), "3_aligned_result/DAPI.PNG"))
 
         merge_data = pd.merge(cell_type, cell_center, on="cell_index")
         img = np.zeros((DAPI.height, DAPI.width, 3), dtype=np.uint8)

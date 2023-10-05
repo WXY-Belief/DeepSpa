@@ -4,7 +4,7 @@ import shutil
 import numpy as np
 import pandas as pd
 from PIL import Image
-from valis import registration, valtils
+from haha.valis import registration, valtils
 from skimage import transform as tf
 import pyvips
 
@@ -42,10 +42,13 @@ def preprocessed_images(path, save_path, Grayscale_threshold, padding):
     os.makedirs(step_1_save_path, exist_ok=True)
 
     for item in all_section:
-        dapi = np.array(Image.open(os.path.join(path, str(item), "DAPI.PNG")))
+        # dapi = np.array(Image.open(os.path.join(path, str(item), "DAPI.PNG")))
+        dapi = cv2.imread(os.path.join(path, str(item), "DAPI.PNG"), cv2.IMREAD_GRAYSCALE)
         new_dapi = np.zeros(max_img_shape)
         new_dapi[padding:dapi.shape[0] + padding, padding:dapi.shape[1] + padding] = dapi
         new_dapi[new_dapi < Grayscale_threshold] = 0
+        print("new_dapi:", new_dapi.shape, np.max(new_dapi))
+
         cv2.imwrite(os.path.join(step_1_save_path, str(item) + ".PNG"), new_dapi)
 
     # step 2：transform the formate of images
@@ -69,56 +72,68 @@ def generate_alinged_need_dir(results_dst_dir, aligned_need_dir, aligned_path, s
                         os.path.join(aligned_need_dir, str(1) + ".tiff"))
     else:
         last_aligned_path = os.path.join(aligned_need_dir, str(1) + ".tiff")
-        command = "vips tiffsave " + os.path.join(aligned_path, str(section - 1),
+        command = "vips tiffsave " + os.path.join(aligned_path,
                                                   "DAPI.PNG") + " " + last_aligned_path + " --tile --pyramid"
         os.system(command)
 
 
-def transform_rna(save_path, bk_img, M, rna_file, nucleus_coor_file, padding, shift, crop):
+def transform_rna(save_path, M, file_path, padding, shift, crop):
     transform = np.array([[M[0], M[1]],
-                      [M[2], M[3]]])
+                          [M[2], M[3]]])
 
-    rna_coor = pd.read_csv(rna_file, sep=",", header=0)
-    np_rna_coor = rna_coor[["row", "col"]].to_numpy()
+    # rna_coor = pd.read_csv(rna_file, sep=",", header=0)
+    # np_rna_coor = rna_coor[["row", "col"]].to_numpy()
+    #
+    # # adding padding
+    # np_rna_coor += np.array([padding - int(shift[1]), padding - int(shift[0])])
+    #
+    # # scale and rotation
+    # aligned_np_rna_coor = np.dot(np_rna_coor, transform)
+    # aligned_np_rna_coor -= np.array([int(crop[1]), int(crop[0])])
+    #
+    # aligned_rna_coor = pd.DataFrame(aligned_np_rna_coor)
+    # aligned_rna_coor.rename({0: "row", 1: "col"}, axis=1, inplace=True)
+    # aligned_rna_coor["gene"] = rna_coor["gene"]
+    # aligned_rna_coor.to_csv(os.path.join(save_path, "aligned_rna_coordinate.csv"), sep=",", header=True, index=False)
+    #
+    # draw_point(aligned_rna_coor, bk_img, save_path)
+    #
+    # # transform nucleus coor
+    # nucleus_coor = pd.read_csv(nucleus_coor_file, sep=",", header=0)
+    # np_nucleus_coor = nucleus_coor[["row", "col"]].to_numpy()
+    #
+    # np_nucleus_coor += np.array([padding - int(shift[1]), padding - int(shift[0])])
+    # aligned_np_nucleus_coor = np.dot(np_nucleus_coor, transform)
+    # aligned_np_nucleus_coor -= np.array([int(crop[1]), int(crop[0])])
+    #
+    # aligned_nucleus_coor = pd.DataFrame(aligned_np_nucleus_coor)
+    # aligned_nucleus_coor.rename({0: "row", 1: "col"}, axis=1, inplace=True)
+    # aligned_nucleus_coor["area"] = nucleus_coor["area"]
+    # aligned_nucleus_coor["cell_index"] = nucleus_coor["cell_index"]
+    # aligned_nucleus_coor.to_csv(os.path.join(save_path, "aligned_cell_center.csv"), sep=",", header=True, index=False)
 
-    # adding padding
-    np_rna_coor += np.array([padding - int(shift[1]), padding - int(shift[0])])
+    #
+    coor_file = pd.read_csv(file_path, sep=",", header=0)
+    coor = coor_file[["row", "col"]].to_numpy()
+    coor += np.array([padding - int(shift[1]), padding - int(shift[0])])
+    aligned_coor = np.dot(coor, transform)
+    aligned_coor -= np.array([int(crop[1]), int(crop[0])])
 
-    # scale and rotation
-    aligned_np_rna_coor = np.dot(np_rna_coor, transform)
-    aligned_np_rna_coor -= np.array([int(crop[1]), int(crop[0])])
+    coor_file.drop(["row", "col"], axis=1, inplace=True)
+    coor_file["row"] = aligned_coor[:, 0]
+    coor_file["col"] = aligned_coor[:, 1]
 
-    aligned_rna_coor = pd.DataFrame(aligned_np_rna_coor)
-    aligned_rna_coor.rename({0: "row", 1: "col"}, axis=1, inplace=True)
-    aligned_rna_coor["gene"] = rna_coor["gene"]
-    aligned_rna_coor.to_csv(os.path.join(save_path, "aligned_rna_coordinate.csv"), sep=",", header=True, index=False)
-
-    draw_point(aligned_rna_coor, bk_img, save_path)
-
-    # transform nucleus coor
-    nucleus_coor = pd.read_csv(nucleus_coor_file, sep=",", header=0)
-    np_nucleus_coor = nucleus_coor[["row", "col"]].to_numpy()
-
-    np_nucleus_coor += np.array([padding - int(shift[1]), padding - int(shift[0])])
-    aligned_np_nucleus_coor = np.dot(np_nucleus_coor, transform)
-    aligned_np_nucleus_coor -= np.array([int(crop[1]), int(crop[0])])
-
-    aligned_nucleus_coor = pd.DataFrame(aligned_np_nucleus_coor)
-    aligned_nucleus_coor.rename({0: "row", 1: "col"}, axis=1, inplace=True)
-    aligned_nucleus_coor["area"] = nucleus_coor["area"]
-    aligned_nucleus_coor["cell_index"] = nucleus_coor["cell_index"]
-    aligned_nucleus_coor.to_csv(os.path.join(save_path, "aligned_cell_center.csv"), sep=",", header=True, index=False)
-
-
+    coor_file.to_csv(save_path, sep=",", header=True, index=False)
 
 
 def sb_step(registrar, save_path):
-    def cnames_from_filename(src_f):
-        f = valtils.get_name(src_f)
-        return ["DAPI"] + f.split(" ")
+    # def cnames_from_filename(src_f):
+    #     f = valtils.get_name(src_f)
+    #     return ["DAPI"] + f.split(" ")
+    #
+    # channel_name_dict = {f: cnames_from_filename(f) for
+    #                      f in registrar.original_img_list}
 
-    channel_name_dict = {f: cnames_from_filename(f) for
-                         f in registrar.original_img_list}
     dst_f = os.path.join(save_path, registrar.name, registrar.name + ".tiff")
     merged_img, channel_names, ome_xml = registrar.warp_and_merge_slides(dst_f,
                                                                          channel_name_dict=None,
@@ -127,8 +142,8 @@ def sb_step(registrar, save_path):
     return merged_img
 
 
-def align_section(data_path, output_path, grayscale_threshold, padding: int=1000):
-    result_save_path = os.path.join(output_path, "3_aligned_result")
+def align_section(data_path, output_path, grayscale_threshold, padding: int = 1000):
+    result_save_path = os.path.join(output_path, "aligned_temp")
 
     # Convert the image data format using VIPS.
     all_section = preprocessed_images(data_path, result_save_path, grayscale_threshold, padding)
@@ -146,21 +161,35 @@ def align_section(data_path, output_path, grayscale_threshold, padding: int=1000
     os.makedirs(final_aligned_path, exist_ok=True)
 
     print("--------strating aligned--------")
-    # all_section[1:]
-    for item in all_section[1:]:
+
+    for item in all_section:
         print("section:", item)
+        this_section_aligned_save_path = os.path.join(output_path, str(item), "3_aligned_result")
+        os.makedirs(this_section_aligned_save_path, exist_ok=True)
+
+        if item == 1:
+            src_path = os.path.join(output_path, str(item), "2_gem")
+            shutil.copyfile(os.path.join(data_path, str(item), "rna_coordinate.csv"),
+                            os.path.join(this_section_aligned_save_path, "aligned_rna_coordinate.csv"))
+            shutil.copyfile(os.path.join(src_path, "filtered_cell_center_coordinate.csv"),
+                            os.path.join(this_section_aligned_save_path, "aligned_cell_center_coordinate.csv"))
+            shutil.copyfile(os.path.join(src_path, "filtered_RNA_and_nearest_cell.csv"),
+                            os.path.join(this_section_aligned_save_path, "aligned_RNA_and_nearest_cell.csv"))
+            shutil.copyfile(os.path.join(result_save_path, "revised_images", str(item)+".PNG"),
+                            os.path.join(this_section_aligned_save_path, "DAPI.PNG"))
+            continue
         this_section_debug_save_path = os.path.join(aligned_debug_path, str(item))
         os.makedirs(this_section_debug_save_path, exist_ok=True)
-
-        this_section_aligned_save_path = os.path.join(final_aligned_path, str(item))
 
         aligned_need_dir = os.path.join(result_save_path, "aligned_need_dir", str(item))
         os.makedirs(aligned_need_dir, exist_ok=True)
 
         # construct the folder aligned
-        generate_alinged_need_dir(result_save_path, aligned_need_dir, aligned_debug_path, item)
+        generate_alinged_need_dir(result_save_path, aligned_need_dir,
+                                  os.path.join(output_path, str(item - 1), "3_aligned_result"), item)
 
         registration_temp_path = os.path.join(registration_result_path, str(item))
+        os.makedirs(registration_temp_path, exist_ok=True)
         registrar = registration.Valis(aligned_need_dir, registration_temp_path, reference_img_f="1.tiff",
                                        align_to_reference=True, imgs_ordered=True, non_rigid_registrar_cls=None,
                                        do_rigid=True)
@@ -182,7 +211,8 @@ def align_section(data_path, output_path, grayscale_threshold, padding: int=1000
         if item == 2:
             ref_img = cv2.imread("/".join([aligned_need_dir, "1.tiff"]), cv2.IMREAD_GRAYSCALE)
         else:
-            ref_img = cv2.imread("/".join([aligned_debug_path, str(item - 1), "DAPI.PNG"]), cv2.IMREAD_GRAYSCALE)
+            ref_img = cv2.imread("/".join([output_path, str(item - 1), "3_aligned_result/DAPI.PNG"]),
+                                 cv2.IMREAD_GRAYSCALE)
 
         ori_img_py = pyvips.Image.new_from_file(os.path.join(result_save_path, "revised_images", str(item) + ".PNG"))
         tx_ty = pd.read_csv("./tx_ty.csv", sep=",", header=0)
@@ -211,7 +241,8 @@ def align_section(data_path, output_path, grayscale_threshold, padding: int=1000
                                         extend=pyvips.enums.Extend.BLACK
                                         )
         warp_img = aligned_img.extract_area(*slide_bbox_xywh)
-        aligned_img = warp_img.numpy()
+        warp_img.write_to_file("temp.png")
+        aligned_img = cv2.imread("temp.png", cv2.IMREAD_GRAYSCALE)
 
         merge_py_img_2 = np.zeros((ref_img.shape[0], ref_img.shape[1], 3))
         merge_py_img_2[:, :, 0] = ref_img
@@ -219,11 +250,18 @@ def align_section(data_path, output_path, grayscale_threshold, padding: int=1000
         cv2.imwrite("/".join([this_section_debug_save_path, "pv_aligned_img.PNG"]), merge_py_img_2)
 
         # transformer rna and nucleus coor
-        rna_file = os.path.join(data_path, str(item), "rna_coordinate.csv")
-        nucleus_coor = os.path.join(output_path, str(item), "2_gem/final_cell_center_coordinate.csv")
         shift = (tx, ty)
-        transform_rna(this_section_aligned_save_path, image_array[:, :, 1], M, rna_file, nucleus_coor, padding, shift,
-                      slide_bbox_xywh[0:2])
+        rna_file = os.path.join(data_path, str(item), "rna_coordinate.csv")
+        save_path_1 = os.path.join(this_section_aligned_save_path, "aligned_rna_coordinate.csv")
+        transform_rna(save_path_1, M, rna_file, padding, shift, slide_bbox_xywh[0:2])
+
+        nucleus_coor = os.path.join(output_path, str(item), "2_gem/filtered_cell_center_coordinate.csv")
+        save_path_2 = os.path.join(this_section_aligned_save_path, "aligned_cell_center_coordinate.csv")
+        transform_rna(save_path_2, M, nucleus_coor, padding, shift, slide_bbox_xywh[0:2])
+
+        rna_near_cell = os.path.join(output_path, str(item), "2_gem/filtered_RNA_and_nearest_cell.csv")
+        save_path_3 = os.path.join(this_section_aligned_save_path, "aligned_RNA_and_nearest_cell.csv")
+        transform_rna(save_path_3, M, rna_near_cell, padding, shift, slide_bbox_xywh[0:2])
 
     registration.kill_jvm()
 
@@ -233,4 +271,4 @@ if __name__ == "__main__":
     result_save_path = "../ISS_registration_results"
     Grayscale_threshold_a = 5
     padding_a = 1000
-    align_image(data_apth, result_save_path, Grayscale_threshold_a, padding_a)
+    align_section(data_apth, result_save_path, Grayscale_threshold_a, padding_a)

@@ -1,38 +1,38 @@
-data_path = "" # the data path
+data_path = "./example_data" # the data path
 
-output_path = "" # the output path
+output_path = "./example_data_out" # the output path
 
-seg_threshold = 0.3 # segmnetation threshold. lower values will generate more cell.
+seg_threshold = 0.4 # segmnetation threshold. lower values will generate more cell.
 
-seg_mode = 1 # segmentation mode. 1: original DAPI as input. 2:The DAPI image is divided into small images of 512 * 512 as input
+seg_mode = 2 # segmentation mode. 1: original DAPI as input. 2:The DAPI image is divided into small images of 512 * 512 as input
 
 device = "GPU" # Devices used
 
-section_align_flag = 0 # whether need to align section. 0:NO 1:YES
+section_align_flag = 1 # whether need to align section. 0:NO 1:YES
 
 filter_mode = 2   # Nuclear filtration mode. 1: Filtered by diameter 2: Filtered by cell area distribution.
 
-top_value = 0  # 1: Filter by diameter. The maximum radius of a nucleus, in px. or  2: Filter by cell distribution. Top percentage.ascend order
+top_value = 150  # 1: Filter by diameter. The maximum radius of a nucleus, in px. or  2: Filter by cell distribution. Top percentage.ascend order
 
-bottom_value = 0  #  1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
+bottom_value = 1  #  1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
 
-gray_value_threshold = 0  # The DAPI image will be subtracted from this value
+gray_value_threshold = 5  # The DAPI image will be subtracted from this value
 
 experiment_mode = "ISS" # the experiment type. ISS: in situ sequence technology. Stereo-seq: Stereo-seq technology
 
 maximum_cell_radius = 150  # The maximum radius of a cell, in px
 
-cell_express_min_number = 3 # The minimum value of cell expression, and cells below this value will be filtered
+cell_express_min_number = 2 # The minimum value of cell expression, and cells below this value will be filtered
 
 cell_express_max_number = 0 # The maximum value of cell expression, and cells above this value will be filtered. if this value is 0, this parameter is invalid
 
 cell_type_annotation_mode = 1   # cell type nnotation mode. 1:tangram 2:clustering
 
-sc_data_path = ""   # The single cell expression matrix
+sc_data_path = "./example_sc_data/sc_data_v1.csv"   # The single cell expression matrix
 
 K = 30 # Number of neighboring cells in find anatomic region
 
-anatomic_region_num = 0 # The number of anatomic region
+anatomic_region_num = 6 # The number of anatomic region
 
 
 

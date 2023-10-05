@@ -7,12 +7,13 @@ from scipy.spatial.distance import cdist
 
 
 def kmeans_clustering(distri_matrix, clustering_result_path, cluster_num):
+    print(cluster_num)
     clustering_result = pd.DataFrame()
     clustering_result["cell_index"] = distri_matrix["cell_index"]
     clustering_result["section"] = distri_matrix["section"]
 
     distri_matrix.drop(["cell_index", "section"], axis=1, inplace=True)
-    cluster = KMeans(n_clusters=cluster_num, random_state=0).fit(distri_matrix)
+    cluster = KMeans(n_clusters=int(cluster_num), random_state=0).fit(distri_matrix)
 
     clustering_result["anatomic_region"] = cluster.labels_
 

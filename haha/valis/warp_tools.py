@@ -1043,6 +1043,11 @@ def warp_img(img, M=None, bk_dxdy=None, out_shape_rc=None,
 
         warp_M = np.linalg.inv(warp_M)
         vips_M = warp_M[:2, :2].reshape(-1).tolist()
+        print("warp_M:", warp_M)
+        print("out_shape_rc:", out_shape_rc)
+        print(tx, ty)
+        print(vips_M)
+
         final_m = pd.DataFrame()
         final_m["M"] = vips_M
         final_m.to_csv("./final_m.csv", sep=",", header=True, index=False)
