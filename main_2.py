@@ -20,12 +20,12 @@ def main(config_path):
     # 5.Cell type map
     cell_type_annotation_mode = all_parameter["cell_type_annotation_mode"]
     sc_data_path = all_parameter["sc_data_path"]
-    # if cell_type_annotation_mode == 1:
-    #     cell_type_map(data_path, output_path, sc_data_path, device)
-    # else:
-    #     all_section = os.listdir(data_path)
-    #     for item in all_section:
-    #         os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
+    if cell_type_annotation_mode == 1:
+        cell_type_map(data_path, output_path, sc_data_path, device)
+    else:
+        all_section = os.listdir(data_path)
+        for item in all_section:
+            os.makedirs(os.path.join(output_path, item, "5_cell_type_result"), exist_ok=True)
 
     # merge result of all section
     all_section_cell_center = pd.DataFrame()
@@ -54,7 +54,7 @@ def main(config_path):
                                      index=False)
 
     # # 5_1.Draw cell type map
-    # draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path, output_path, flag)
+    draw_cell_type_map(all_section_cell_center, all_section_cell_type, data_path, output_path, flag)
 
     # 7.find anatomic regions
     K = all_parameter["K"]

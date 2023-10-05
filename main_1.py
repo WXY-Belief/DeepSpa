@@ -28,20 +28,20 @@ if __name__ == "__main__":
     seg_threshold = all_parameter["seg_threshold"]
     seg_mode = all_parameter["seg_mode"]
 
-    # # 1.Detecting and filtering nucleus
-    # if seg_mode == 1:
-    #     nucleus_recongnition(data_path, output_path, device, filter_mode, top_value, bottom_value, seg_threshold)
-    # else:
-    #     nucleus_recongnition_cut_img(data_path, output_path, device, filter_mode, top_value, bottom_value,
-    #                                  seg_threshold)
-    #
-    # # 2.Assign RNA to cell
-    # maximum_cell_radius = all_parameter['maximum_cell_radius']
-    # cell_express_min_number = all_parameter["cell_express_min_number"]
-    # cell_express_max_number = all_parameter['cell_express_max_number']
-    # experiment_mode = all_parameter["experiment_mode"]
-    # assign_rna_to_cell(data_path, output_path, maximum_cell_radius, cell_express_min_number,
-    #                    cell_express_max_number, experiment_mode, device)
+    # 1.Detecting and filtering nucleus
+    if seg_mode == 1:
+        nucleus_recongnition(data_path, output_path, device, filter_mode, top_value, bottom_value, seg_threshold)
+    else:
+        nucleus_recongnition_cut_img(data_path, output_path, device, filter_mode, top_value, bottom_value,
+                                     seg_threshold)
+
+    # 2.Assign RNA to cell
+    maximum_cell_radius = all_parameter['maximum_cell_radius']
+    cell_express_min_number = all_parameter["cell_express_min_number"]
+    cell_express_max_number = all_parameter['cell_express_max_number']
+    experiment_mode = all_parameter["experiment_mode"]
+    assign_rna_to_cell(data_path, output_path, maximum_cell_radius, cell_express_min_number,
+                       cell_express_max_number, experiment_mode, device)
     #
     # # 3.Align all section
     flag = all_parameter["section_align_flag"]
@@ -51,5 +51,5 @@ if __name__ == "__main__":
     # 4.Draw cell segmentation result
     draw_cell_seg(data_path, output_path, flag)
 
-    # if all_parameter["cell_type_annotation_mode"] == 1:
-    #     main(args.c)
+    if all_parameter["cell_type_annotation_mode"] == 1:
+        main(args.c)
