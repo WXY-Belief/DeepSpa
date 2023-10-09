@@ -142,6 +142,12 @@ def sb_step(registrar, save_path):
     return merged_img
 
 
+def revise_and_move_section_1(path, padding, save_path):
+    coor = pd.read_csv(path, sep=",", header=0)
+    coor["row"] += padding
+    coor["col"] += padding
+    coor.to_csv(save_path, sep=",", header=True, index=False)
+
 def align_section(data_path, output_path, grayscale_threshold, padding: int = 1000):
     result_save_path = os.path.join(output_path, "aligned_temp")
 
@@ -169,13 +175,20 @@ def align_section(data_path, output_path, grayscale_threshold, padding: int = 10
 
         if item == 1:
             src_path = os.path.join(output_path, str(item), "2_gem")
-            shutil.copyfile(os.path.join(data_path, str(item), "rna_coordinate.csv"),
-                            os.path.join(this_section_aligned_save_path, "aligned_rna_coordinate.csv"))
-            shutil.copyfile(os.path.join(src_path, "filtered_cell_center_coordinate.csv"),
-                            os.path.join(this_section_aligned_save_path, "aligned_cell_center_coordinate.csv"))
-            shutil.copyfile(os.path.join(src_path, "filtered_RNA_and_nearest_cell.csv"),
-                            os.path.join(this_section_aligned_save_path, "aligned_RNA_and_nearest_cell.csv"))
-            shutil.copyfile(os.path.join(result_save_path, "revised_images", str(item)+".PNG"),
+
+            nucleus_coor_path = os.path.join(src_path, "filtered_cell_center_coordinate.csv")
+            save_path_nucleus = os.path.join(this_section_aligned_save_path, "aligned_cell_center_coordinate.csv")
+            revise_and_move_section_1(nucleus_coor_path, padding, save_path_nucleus)
+
+            rna_coor_path = os.path.join(data_path, str(item), "rna_coordinate.csv")
+            save_path_rna = os.path.join(this_section_aligned_save_path, "aligned_rna_coordinate.csv")
+            revise_and_move_section_1(rna_coor_path, padding, save_path_rna)
+
+            RNA_and_nearest_cell_coor_path = os.path.join(src_path, "filtered_RNA_and_nearest_cell.csv")
+            save_path_RNA_and_nearest_cell = os.path.join(this_section_aligned_save_path, "aligned_RNA_and_nearest_cell.csv")
+            revise_and_move_section_1(RNA_and_nearest_cell_coor_path, padding, save_path_RNA_and_nearest_cell)
+
+            shutil.copyfile(os.path.join(result_save_path, "revised_images", str(item) + ".PNG"),
                             os.path.join(this_section_aligned_save_path, "DAPI.PNG"))
             continue
         this_section_debug_save_path = os.path.join(aligned_debug_path, str(item))
