@@ -132,3 +132,11 @@ Then, you can use point cloud by running the following command in local terminal
 ```
 python 3D_point_cloud.py --c ./example_Configration.toml --m all
 ```
+
+## 4.A solution for a specific BUG.
+**(1)pyvips**  
+**For Windows**, if you encounter an issue with "pyvips" not importing.Please download the "vips"  package from https://github.com/libvips/libvips/releases and add the installation path into environment variables.  
+**For Linux***, To install "pyvips" using conda.You can find detailed installation instructions at https://anaconda.org/conda-forge/pyvips.  
+
+**(2)java**  
+if you encounter the error message "jgo. jgo .Executabtenotfound" in running, please install "maven" package from https://maven.apache.org/download.cgi and add the installation path into environment variables.
