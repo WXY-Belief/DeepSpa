@@ -10,7 +10,7 @@ pip install -r requirements.txt
 - GPU Memory: 3GB+
 
 **Note 1: Please download the pre training weights from https://figshare.com/account/articles/24117366 before use. Do not modify the name of the weights and place them into the ./haha/deep_learning_model/final_model directory.**  
-**Note 2: Because we use VALIS to align the slices, you need to install the packages required by VALIS on [GitHub.](https://github.com/MathOnco/VALIS).** 
+**Note 2: Because we use VALIS to align the slices, you need to install the packages required by VALIS on [GitHub](https://github.com/MathOnco/VALIS).** 
 ## 3.Tutorial
 ### Directory structure of input data
 The sections are numerically named, starting from 1 for the top layer. The DAPI images are in TIFF, PNG, or JPEG format, while the RNA coordinate file must be in CSV format.The directory structure is as follows:  
@@ -136,7 +136,7 @@ python 3D_point_cloud.py --c ./example_Configration.toml --m all
 ## 4.A solution for a specific BUG.
 **(1)pyvips**  
 **For Windows**, if you encounter an issue with "pyvips" not importing.Please download the "vips"  package from https://github.com/libvips/libvips/releases and add the installation path into environment variables.  
-**For Linux***, To install "pyvips" using conda.You can find detailed installation instructions at https://anaconda.org/conda-forge/pyvips.  
+**For Linux**, To install "pyvips" using conda.You can find detailed installation instructions at https://anaconda.org/conda-forge/pyvips.  
 
 **(2)java**  
 if you encounter the error message "jgo. jgo .Executabtenotfound" in running, please install "maven" package from https://maven.apache.org/download.cgi and add the installation path into environment variables.
