@@ -2,9 +2,9 @@ data_path = "./example_data" # the data path
 
 output_path = "./example_data_out" # the output path
 
-seg_threshold = 0.4 # segmnetation threshold. lower values will generate more cell.
+nucleus_seg_threshold = 0.4 # segmnetation threshold. lower values will generate more cell.
 
-seg_mode = 2 # segmentation mode. 1: original DAPI as input. 2:The DAPI image is divided into small images of 512 * 512 as input
+nucleus_seg_mode = 2 # segmentation mode. 1: original DAPI as input. 2:The DAPI image is divided into small images of 512 * 512 as input
 
 device = "GPU" # Devices used
 

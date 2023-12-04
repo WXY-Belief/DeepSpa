@@ -25,8 +25,8 @@ if __name__ == "__main__":
     top_value = all_parameter["top_value"]
     bottom_value = all_parameter["bottom_value"]
     gray_value_threshold = all_parameter["gray_value_threshold"]
-    seg_threshold = all_parameter["seg_threshold"]
-    seg_mode = all_parameter["seg_mode"]
+    seg_threshold = all_parameter["nucleus_seg_threshold"]
+    seg_mode = all_parameter["nucleus_seg_mode"]
 
     # 1.Detecting and filtering nucleus
     if seg_mode == 1:
