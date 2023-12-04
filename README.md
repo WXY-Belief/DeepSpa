@@ -89,6 +89,8 @@ The Configration.toml include all parameter in runing.
   
 - `experiment_mode`:# the experiment type. ISS: in situ sequence technology. NGS: Next-Generation Sequencing technology
 
+- `assign_mode`:# the methods that assigned RNA to cell. nucleus: using the distance between nucleus and RNA. cytoplasm: using the cytoplasm aera.
+
 - `maximum_cell_radius`: # The maximum radius of a cell, in px, control size of cell.
 
 - `cell_express_min_number`: # The manimun value of cell expression, and cells below this value will be filtered.
