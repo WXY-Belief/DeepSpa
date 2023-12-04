@@ -86,6 +86,8 @@ The Configration.toml include all parameter in runing.
 - `bottom_value`: 1: Filter by diameter. The minimum radius of a nucleus, in px. or 2: Filter by cell distribution. Bottom percentage.ascend order
 
 - `gray_value_threshold`: # The DAPI image will be subtracted from this value to reduce impact of overexposure.
+  
+- `experiment_mode`:# the experiment type. ISS: in situ sequence technology. NGS: Next-Generation Sequencing technology
 
 - `maximum_cell_radius`: # The maximum radius of a cell, in px, control size of cell.
 
