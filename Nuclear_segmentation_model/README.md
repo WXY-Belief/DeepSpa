@@ -13,6 +13,12 @@ We downloaded the dataset from the official website of dsb2018 and tissuenet, an
   - tissuenet_1.0
     - images
     - labels
+  - CoNSep
+    - images
+    - labels
+  - PanNuke
+    - images
+    - labels
 
 
 ## Train
@@ -20,6 +26,10 @@ We downloaded the dataset from the official website of dsb2018 and tissuenet, an
 `./tools/dist_train.sh configs/dsb.py 1`
 
 `./tools/dist_train.sh configs/tissuenet.py 1`
+
+`./tools/dist_train.sh configs/consep.py 1`
+
+`./tools/dist_train.sh configs/pannuke.py 1`
 
 ### Eval
 
